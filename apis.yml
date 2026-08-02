@@ -1,8 +1,20 @@
 aid: atsena-therapeutics
 name: Atsena Therapeutics
-description: 'Atsena Therapeutics is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+description: 'Atsena Therapeutics is a clinical-stage gene therapy company based in Durham,
+  North Carolina, in the Research Triangle, developing first- and best-in-class genetic
+  medicines for inherited retinal diseases with the goal of reversing or preventing
+  blindness. Founded by ocular gene therapy pioneers Shannon Boye and Sanford Boye,
+  the company builds on two proprietary AAV delivery platforms: a laterally spreading
+  AAV.SPR capsid engineered to reach retinal cells without the surgical trauma of a
+  subretinal bleb, and a dual-vector technology that splits genes too large for a single
+  AAV across two vectors. Its clinical pipeline includes ATSN-201 for X-linked retinoschisis
+  (XLRS) in a pivotal Phase 3 trial, ATSN-101 for LCA1 (Leber congenital amaurosis 1)
+  advancing to a pivotal trial with partner Nippon Shinyaku, and IND-enabling programs
+  ATSN-301 for Usher syndrome 1B and ATSN-401 for Stargardt disease. Atsena publishes
+  a corporate website, press releases, clinical trial information and patient resources,
+  but operates no public developer program, API, or machine-readable API contract.'
 url: https://raw.githubusercontent.com/api-evangelist/atsena-therapeutics/refs/heads/main/apis.yml
+image: https://atsenatx.com/wp-content/themes/atsenatx/img/touch-icon-ipad-retina.png
 x-type: company
 x-source: harvest:secondary-market
 x-tier: stub
@@ -12,6 +24,15 @@ created: '2026-08-02'
 modified: '2026-08-02'
 tags:
 - Company
+- Biotechnology
+- Gene Therapy
+- Life Sciences
+- Pharmaceuticals
+- Clinical Trials
+- Ophthalmology
+- Rare Disease
+- Healthcare
+- Research and Development
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -19,5 +40,29 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/atsena-therapeutics-domain-security.yml
 - type: Website
+  url: https://atsenatx.com/
+- type: About
+  url: https://atsenatx.com/about/overview/
+- type: News
+  url: https://atsenatx.com/news/
+- type: PressReleases
+  url: https://atsenatx.com/news/press-releases/
+- type: BlogRSS
+  url: https://atsenatx.com/feed/
+- type: PrivacyPolicy
+  url: https://atsenatx.com/privacy-policy/
+- type: Contact
+  url: https://atsenatx.com/contact/
+- type: Careers
+  url: https://atsenatx.com/careers/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/atsenatx
+- type: Investors
+  url: https://atsenatx.com/about/investors/
+- type: Partners
+  url: https://atsenatx.com/about/partners/
+- type: SecondaryMarket
   url: https://forgeglobal.com/atsena-therapeutics_stock/
