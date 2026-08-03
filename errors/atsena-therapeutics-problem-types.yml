@@ -1,0 +1,138 @@
+generated: '2026-08-02'
+method: derived
+source: >-
+  Live error responses triggered against https://atsenatx.com/wp-json/ on 2026-08-02, plus
+  openapi/atsena-therapeutics-wp-rest-openapi.yml
+format: wordpress-rest
+rfc9457: false
+envelope:
+  content_type: application/json
+  shape: '{"code": "<string>", "message": "<string>", "data": {"status": <integer>}}'
+  discriminator: code
+  note: >-
+    The WordPress REST error envelope. It is NOT RFC 9457 application/problem+json — there is no
+    `type` URI, no `instance` and no `detail` member, and Atsena Therapeutics publishes no problem-type
+    registry. `code` is the stable machine-readable discriminator and is what a client should branch
+    on; `message` is human prose and may change. Validation failures extend `data` with a `params`
+    map (parameter name to message) and a `details` map (parameter name to a nested
+    {code, message, data} object).
+  caution: >-
+    This envelope applies only under /wp-json. Unmatched paths elsewhere on the host — /openapi.json,
+    /graphql, /.well-known/security.txt — are served the site's HTML 404 page with an HTTP 404
+    status. Clients must not assume a JSON body on a non-2xx response.
+problems:
+  - status: 404
+    code: rest_no_route
+    title: No route was found matching the URL and request method
+    detail: Standard WordPress REST 404 for a path that matches no registered route.
+    remediation: Consult the route-discovery document at https://atsenatx.com/wp-json/.
+    method: probed
+    observed_at: https://atsenatx.com/wp-json/wp/v2/nope
+  - status: 404
+    code: rest_post_invalid_id
+    title: Invalid post ID
+    detail: >-
+      An item route was addressed with an id that does not exist or is not visible to the caller.
+      Posts, pages and media all return this same code; taxonomy terms return `rest_term_invalid`
+      ("Term does not exist.") at the same 404 status — both verified live.
+    remediation: List the collection first and use an id from that response.
+    method: probed
+    observed_at: >-
+      https://atsenatx.com/wp-json/wp/v2/posts/999999,
+      https://atsenatx.com/wp-json/wp/v2/pages/999999,
+      https://atsenatx.com/wp-json/wp/v2/media/999999
+    source_operation: openapi/atsena-therapeutics-wp-rest-openapi.yml#getPost
+  - status: 400
+    code: rest_invalid_param
+    title: Invalid parameter
+    detail: >-
+      A query parameter failed the schema published in the route-discovery document — type, enum, or
+      minimum/maximum. `data.params` names each offending parameter with a human message and
+      `data.details` nests a per-parameter code such as rest_out_of_bounds.
+    remediation: >-
+      Validate against the parameter schemas in openapi/atsena-therapeutics-wp-rest-openapi.yml,
+      which are derived verbatim from the live discovery document. per_page must be 1..100.
+    method: probed
+    observed_at: 'https://atsenatx.com/wp-json/wp/v2/posts?per_page=999'
+    observed_body: >-
+      {"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,
+      "params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},
+      "details":{"per_page":{"code":"rest_out_of_bounds", ...}}}}
+  - status: 400
+    code: rest_post_invalid_page_number
+    title: The page number requested is larger than the number of pages available
+    detail: >-
+      Paging past the last page is an error, not an empty collection. Clients must read
+      `X-WP-TotalPages` or follow `Link rel="next"` rather than incrementing `page` until empty.
+    remediation: Stop when the Link header no longer advertises rel="next".
+    method: probed
+    observed_at: 'https://atsenatx.com/wp-json/wp/v2/posts?per_page=10&page=99'
+  - status: 404
+    code: rest_term_invalid
+    title: Term does not exist
+    detail: A taxonomy term item route (category or tag) was addressed with an id that does not exist.
+    remediation: List /wp/v2/categories or /wp/v2/tags and use an id from that response.
+    method: probed
+    observed_at: https://atsenatx.com/wp-json/wp/v2/categories/999999
+    source_operation: openapi/atsena-therapeutics-wp-rest-openapi.yml#getCategory
+  - status: 401
+    code: rest_forbidden
+    title: Sorry, you are not allowed to do that
+    detail: >-
+      WordPress capability check failure for an anonymous or under-privileged caller. This is the
+      response for the site's privileged surfaces — settings, plugins, templates, menus, the
+      wp-abilities registry and the oEmbed proxy.
+    remediation: >-
+      These endpoints require a WordPress administrative credential that is not available to third
+      parties. There is no public path to authorization; treat them as out of scope.
+    method: probed
+    observed_at: >-
+      https://atsenatx.com/wp-json/wp/v2/settings,
+      https://atsenatx.com/wp-json/wp-abilities/v1/abilities,
+      https://atsenatx.com/wp-json/oembed/1.0/proxy
+  - status: 401
+    code: rest_user_cannot_view
+    title: Sorry, you are not allowed to access users without authentication
+    detail: >-
+      The users collection is closed to anonymous callers, so the `author` integer on a post or page
+      record cannot be resolved to a name without credentials.
+    remediation: >-
+      Use the `yoast_head_json` author metadata on the record, or the oEmbed response, both of which
+      expose an author name anonymously.
+    method: probed
+    observed_at: https://atsenatx.com/wp-json/wp/v2/users
+  - status: 401
+    code: rest_forbidden_context
+    title: Sorry, you are not allowed to edit posts in this post type
+    detail: Returned when `context=edit` is requested without credentials.
+    remediation: Use the default `context=view`, or `context=embed` for the trimmed representation.
+    method: probed
+    observed_at: 'https://atsenatx.com/wp-json/wp/v2/posts?context=edit'
+  - status: 403
+    code: rest_comment_disabled
+    title: Comments are disabled
+    detail: >-
+      Comments are switched off site-wide, so /wp/v2/comments is unavailable to every caller,
+      authenticated or not. The route is registered but never usable, which is why it is excluded
+      from the derived OpenAPI.
+    method: probed
+    observed_at: https://atsenatx.com/wp-json/wp/v2/comments
+  - status: 403
+    code: rest_cookie_invalid_nonce
+    title: Cookie check failed
+    detail: A cookie-authenticated write was sent without a valid X-WP-Nonce header.
+    method: derived
+    note: >-
+      WordPress core behaviour on the write paths. Not triggered during this pass — writes were not
+      attempted against a third party's production site.
+coverage_note: >-
+  Nine of the ten entries above were triggered live and carry `method: probed` with the exact URL
+  that produced them. Atsena Therapeutics publishes no error reference page, no developer
+  documentation and no status vocabulary, so there is no richer provider-authored catalogue to
+  harvest — this artifact is the catalogue. The derived OpenAPI declares 400 and 404 on all 20
+  operations because those are the statuses this surface actually returns for bad input and missing
+  records.
+x-evidence:
+  fetched: '2026-08-02'
+  probed_codes: 9
+  derived_codes: 1

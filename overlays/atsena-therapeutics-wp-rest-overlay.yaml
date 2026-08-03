@@ -1,0 +1,89 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Atsena Therapeutics Content API
+  version: 1.0.0
+extends: openapi/atsena-therapeutics-wp-rest-openapi.yml
+x-generated: '2026-08-02'
+x-method: generated
+x-note: >-
+  Captures the API Evangelist enrichment layer over the derived WordPress REST specification. The
+  derived spec is itself a faithful projection of the provider's live route-discovery document; this
+  overlay adds only our own annotations — provenance, agent-facing guidance and cross-links to the
+  sibling artifacts in this repo — and never restates or alters the provider's contract. It is
+  applied to the derived spec, not to a provider-published one, because Atsena Therapeutics publishes
+  no OpenAPI of its own.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provenance: >-
+        Derived by the API Evangelist enrichment pipeline from
+        https://atsenatx.com/wp-json/ on 2026-08-02. Not authored or endorsed by Atsena Therapeutics.
+      x-apievangelist-surface-class: incidental-cms
+      x-apievangelist-surface-note: >-
+        This is the content-management API of a corporate marketing site, not a product API. Atsena
+        Therapeutics is a clinical-stage gene therapy company with no developer programme. The
+        surface is real, callable and anonymously readable, but it was never offered as a developer
+        product, carries no SLA, no versioning policy and no support channel, and may change or close
+        without notice.
+      x-apievangelist-artifacts:
+        authentication: authentication/atsena-therapeutics-authentication.yml
+        conventions: conventions/atsena-therapeutics-conventions.yml
+        errors: errors/atsena-therapeutics-problem-types.yml
+        lifecycle: lifecycle/atsena-therapeutics-lifecycle.yml
+        conformance: conformance/atsena-therapeutics-conformance.yml
+        data_model: data-model/atsena-therapeutics-data-model.yml
+        well_known: well-known/atsena-therapeutics-well-known.yml
+        domain_security: security/atsena-therapeutics-domain-security.yml
+        skills: skills/_index.yml
+  - target: $.info
+    update:
+      x-apievangelist-upstream-contract: https://developer.wordpress.org/rest-api/
+      x-apievangelist-upstream-note: >-
+        The wp/v2 contract this surface implements is documented upstream by WordPress, not by the
+        provider. Callers should read the WordPress REST handbook for semantics the provider never
+        published.
+  - target: $.servers[0]
+    update:
+      x-apievangelist-verified: '2026-08-02'
+      x-apievangelist-verified-anonymous: true
+      x-apievangelist-infrastructure: Cloudflare CDN in front of WP Engine hosting.
+  - target: $.paths['/wp/v2/posts'].get
+    update:
+      x-apievangelist-agent-note: >-
+        The primary dataset on this surface: 55 press releases and company-news items, the company's
+        public announcement record. Order by date desc (the default) to track clinical, regulatory
+        and financing milestones. Filter to the newsroom proper with categories=4 (Press Release) or
+        categories=6 (Company News).
+      x-apievangelist-rate-guidance: >-
+        No published rate limit. robots.txt requests Crawl-delay 10; treat that as the courtesy floor
+        and cache for at least the advertised 600s max-age.
+  - target: $.paths['/wp/v2/pages'].get
+    update:
+      x-apievangelist-agent-note: >-
+        Where the scientific substance lives: the four programme pages (XLRS, LCA1, USH1B, STGD), the
+        pipeline, and the two platform-technology pages (laterally spreading AAV capsids, dual-vector
+        technology). Use parent=20 for programmes, parent=570 for technology, parent=9 for the
+        about/leadership set.
+  - target: $.paths['/wp/v2/search'].get
+    update:
+      x-apievangelist-agent-note: >-
+        Cheapest entry point for a question-answering agent: one call spans posts and pages and
+        returns {id, title, url, type, subtype}, which can then be resolved against the matching item
+        route.
+  - target: $.components.schemas.Post
+    update:
+      x-apievangelist-field-note: >-
+        `author` is an integer that CANNOT be resolved anonymously — /wp/v2/users returns HTTP 401.
+        Read the author name from `yoast_head_json` on the record, or from the oEmbed response,
+        instead of attempting to dereference the id.
+  - target: $.components.schemas.Error
+    update:
+      x-apievangelist-error-note: >-
+        Branch on `code`, never on `message`. Full catalogue with live-probed examples in
+        errors/atsena-therapeutics-problem-types.yml.
+  - target: $.components.securitySchemes.applicationPassword
+    update:
+      x-apievangelist-availability: >-
+        Not obtainable by third parties. Minted per WordPress user inside wp-admin, with no
+        self-service signup. Present in the specification only because the provider advertises it in
+        the route index; every operation modelled here is anonymous.

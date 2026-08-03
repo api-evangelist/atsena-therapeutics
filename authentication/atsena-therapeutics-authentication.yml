@@ -1,0 +1,100 @@
+generated: '2026-08-02'
+method: derived
+source: >-
+  openapi/atsena-therapeutics-wp-rest-openapi.yml, the live route-discovery document at
+  https://atsenatx.com/wp-json/, and live response headers observed 2026-08-02
+summary:
+  types:
+    - none
+    - http
+    - apiKey
+  api_key_in:
+    - header
+  oauth2_flows: []
+  anonymous_read: true
+  headline: >-
+    Every operation modelled in this repo is anonymous. Atsena Therapeutics publishes no developer
+    program, issues no API keys and runs no OAuth authorization server; the only credentials this
+    surface understands are WordPress administrative ones, which are not available to third parties.
+schemes:
+  - name: anonymous
+    type: none
+    description: >-
+      The default and only scheme a third party can use. All 20 read operations in
+      openapi/atsena-therapeutics-wp-rest-openapi.yml were verified to return HTTP 200 with no
+      credentials on 2026-08-02 — posts, pages, media, categories, tags, search, the type/taxonomy/
+      status discovery endpoints, the route index and oEmbed. The spec carries a top-level
+      `security: [{}]` to state this explicitly.
+    sources:
+      - openapi/atsena-therapeutics-wp-rest-openapi.yml
+  - name: applicationPassword
+    type: http
+    scheme: basic
+    description: >-
+      WordPress application passwords — the only scheme the site advertises, published in the route
+      index under authentication['application-passwords'] with an authorization endpoint at
+      https://atsenatx.com/wp-admin/authorize-application.php. This is an administrative credential
+      minted per WordPress user inside wp-admin; there is no self-service signup and no way for an
+      external developer to obtain one. It guards the write operations and the privileged reads
+      listed under `gated_surfaces` below.
+    obtain: https://atsenatx.com/wp-admin/authorize-application.php
+    self_service: false
+    sources:
+      - openapi/atsena-therapeutics-wp-rest-discovery-original.json
+  - name: wpNonce
+    type: apiKey
+    in: header
+    parameter: X-WP-Nonce
+    description: >-
+      WordPress cookie-authentication nonce, used by the site's own logged-in admin UI rather than by
+      API clients. Not advertised in the route index; observed in the live
+      `Access-Control-Allow-Headers` response header on every wp-json response
+      (Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type).
+    sources:
+      - live response headers on https://atsenatx.com/wp-json/wp/v2/posts
+gated_surfaces:
+  - path: /wp/v2/users
+    status: 401
+    code: rest_user_cannot_view
+    note: >-
+      Author identities are not disclosed anonymously, so the `author` id on a post or page cannot be
+      resolved without credentials.
+  - path: /wp/v2/settings
+    status: 401
+    code: rest_forbidden
+  - path: /wp/v2/plugins
+    status: 401
+    code: rest_forbidden
+  - path: /wp/v2/templates
+    status: 401
+    code: rest_forbidden
+  - path: /wp/v2/menus
+    status: 401
+    code: rest_forbidden
+  - path: /wp-abilities/v1/abilities
+    status: 401
+    code: rest_forbidden
+    note: >-
+      The WordPress Abilities registry — the agent-facing capability surface WordPress 6.8+ exposes —
+      is registered on this install but rejects anonymous callers. The namespace index at
+      /wp-abilities/v1 is readable (200); the abilities and categories collections beneath it are
+      not. No MCP namespace is registered on this install.
+  - path: /oembed/1.0/proxy
+    status: 401
+    code: rest_forbidden
+  - path: /wp/v2/comments
+    status: 403
+    code: rest_comment_disabled
+    note: Comments are disabled site-wide, so the collection is unavailable to everyone, not just anonymous callers.
+absent:
+  oauth2: >-
+    No OAuth. /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource both
+    returned 404, and no scope surface exists anywhere on this host — scopes/ is deliberately not
+    emitted.
+  openid_connect: '/.well-known/openid-configuration returned 404.'
+  api_keys: No API key programme, no key issuance, no developer account.
+  mtls: Not offered.
+x-evidence:
+  fetched: '2026-08-02'
+  anonymous_200_operations: 20
+  http_401_surfaces: 7

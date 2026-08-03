@@ -1,24 +1,27 @@
 aid: atsena-therapeutics
 name: Atsena Therapeutics
-description: 'Atsena Therapeutics is a clinical-stage gene therapy company based in Durham,
-  North Carolina, in the Research Triangle, developing first- and best-in-class genetic
-  medicines for inherited retinal diseases with the goal of reversing or preventing
-  blindness. Founded by ocular gene therapy pioneers Shannon Boye and Sanford Boye,
-  the company builds on two proprietary AAV delivery platforms: a laterally spreading
-  AAV.SPR capsid engineered to reach retinal cells without the surgical trauma of a
-  subretinal bleb, and a dual-vector technology that splits genes too large for a single
-  AAV across two vectors. Its clinical pipeline includes ATSN-201 for X-linked retinoschisis
-  (XLRS) in a pivotal Phase 3 trial, ATSN-101 for LCA1 (Leber congenital amaurosis 1)
-  advancing to a pivotal trial with partner Nippon Shinyaku, and IND-enabling programs
-  ATSN-301 for Usher syndrome 1B and ATSN-401 for Stargardt disease. Atsena publishes
-  a corporate website, press releases, clinical trial information and patient resources,
-  but operates no public developer program, API, or machine-readable API contract.'
+description: >-
+  Atsena Therapeutics is a clinical-stage gene therapy company based in Durham, North Carolina, in
+  the Research Triangle, developing first- and best-in-class genetic medicines for inherited retinal
+  diseases with the goal of reversing or preventing blindness. Founded by ocular gene therapy
+  pioneers Shannon Boye and Sanford Boye, the company builds on two proprietary AAV delivery
+  platforms: a laterally spreading AAV.SPR capsid engineered to reach retinal cells without the
+  surgical trauma of a subretinal bleb, and a dual-vector technology that splits genes too large for
+  a single AAV across two vectors. Its clinical pipeline includes ATSN-201 for X-linked
+  retinoschisis (XLRS) in a pivotal Phase 3 trial, ATSN-101 for LCA1 (Leber congenital amaurosis 1)
+  advancing to a pivotal trial with partner Nippon Shinyaku, and IND-enabling programs ATSN-301 for
+  Usher syndrome 1B and ATSN-401 for Stargardt disease. Atsena runs no developer program and
+  publishes no product API, no developer documentation and no specification of its own. The only
+  machine-readable surface it exposes is the anonymously readable WordPress REST content API behind
+  atsenatx.com, which serves the company's press releases, program and platform pages, and media
+  library as JSON; the OpenAPI in this repo is derived by API Evangelist from that surface's own
+  live route index.
 url: https://raw.githubusercontent.com/api-evangelist/atsena-therapeutics/refs/heads/main/apis.yml
 image: https://atsenatx.com/wp-content/themes/atsenatx/img/touch-icon-ipad-retina.png
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: enriched
+x-tier-reason: enrichment pass 2026-08-02
 specificationVersion: '0.20'
 created: '2026-08-02'
 modified: '2026-08-02'
@@ -33,27 +36,83 @@ tags:
 - Rare Disease
 - Healthcare
 - Research and Development
-apis: []
+- Content API
+- WordPress
+apis:
+- aid: atsena-therapeutics:atsena-therapeutics-content-api
+  name: Atsena Therapeutics Content API
+  description: >-
+    The anonymously readable WordPress REST API behind atsenatx.com. It exposes Atsena Therapeutics
+    press releases and company news (posts), the program pages for ATSN-201/XLRS, ATSN-101/LCA1,
+    ATSN-301/USH1B and ATSN-401/Stargardt plus the pipeline and the two AAV platform-technology
+    pages (pages), the media library, post categories and tags, cross-content search, and the
+    type/taxonomy/status discovery endpoints. This is not a developer product Atsena markets; it is
+    the site's own content surface, published at /wp-json/ and verified on 2026-08-02 to return data
+    without credentials across all 20 modelled operations. The OpenAPI in this repo is derived from
+    that published route index. Writes and the privileged reads (users, settings, plugins,
+    templates, menus, the wp-abilities registry) are gated behind WordPress application passwords,
+    which no third party can obtain, and are deliberately not modelled.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - content
+  - press-releases
+  - clinical-programs
+  - wordpress
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-wp-rest-openapi.yml
+  - type: Overlay
+    url: overlays/atsena-therapeutics-wp-rest-overlay.yaml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+  x-contract-provenance: >-
+    Derived by the API Evangelist enrichment pipeline from the WordPress REST route index the site
+    publishes at https://atsenatx.com/wp-json/ (233 routes across 12 namespaces, harvested verbatim
+    to openapi/atsena-therapeutics-wp-rest-discovery-original.json) and verified against live
+    anonymous responses on 2026-08-02. Atsena Therapeutics publishes no developer documentation, no
+    API reference, no getting-started guide and no support channel for this surface, so no
+    Documentation/APIReference/GettingStarted/DeveloperPortal pointers are emitted — the humanURL
+    above is the upstream WordPress REST handbook that describes the wp/v2 contract this surface
+    implements.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
-- type: DomainSecurity
-  url: security/atsena-therapeutics-domain-security.yml
 - type: Website
   url: https://atsenatx.com/
 - type: About
   url: https://atsenatx.com/about/overview/
+- type: Blog
+  url: https://atsenatx.com/news/
 - type: News
   url: https://atsenatx.com/news/
 - type: PressReleases
   url: https://atsenatx.com/news/press-releases/
 - type: BlogRSS
   url: https://atsenatx.com/feed/
+- type: Publications
+  url: https://atsenatx.com/news/presentations-and-publications/
+- type: Pipeline
+  url: https://atsenatx.com/programs/pipeline/
+- type: Technology
+  url: https://atsenatx.com/our-approach/
+- type: ClinicalTrials
+  url: https://atsenatx.com/clinical-trials/
+- type: Patients
+  url: https://atsenatx.com/for-patients/
 - type: PrivacyPolicy
   url: https://atsenatx.com/privacy-policy/
+- type: Support
+  url: https://atsenatx.com/contact/
 - type: Contact
   url: https://atsenatx.com/contact/
 - type: Careers
@@ -66,3 +125,56 @@ common:
   url: https://atsenatx.com/about/partners/
 - type: SecondaryMarket
   url: https://forgeglobal.com/atsena-therapeutics_stock/
+- type: OpenAPI
+  url: openapi/atsena-therapeutics-wp-rest-openapi.yml
+- type: Overlay
+  url: overlays/atsena-therapeutics-wp-rest-overlay.yaml
+- type: Authentication
+  url: authentication/atsena-therapeutics-authentication.yml
+- type: Conventions
+  url: conventions/atsena-therapeutics-conventions.yml
+- type: ErrorCatalog
+  url: errors/atsena-therapeutics-problem-types.yml
+- type: DataModel
+  url: data-model/atsena-therapeutics-data-model.yml
+- type: Lifecycle
+  url: lifecycle/atsena-therapeutics-lifecycle.yml
+- type: Conformance
+  url: conformance/atsena-therapeutics-conformance.yml
+- type: WellKnown
+  url: well-known/atsena-therapeutics-well-known.yml
+- type: DomainSecurity
+  url: security/atsena-therapeutics-domain-security.yml
+- type: LLMsTxt
+  url: llms/atsena-therapeutics-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment-notes: >-
+  Deliberately absent, each a verified negative probed on 2026-08-02, recorded so a later pass does
+  not re-litigate them: Idempotency (no idempotency contract exists on this surface — WordPress core
+  implements no idempotency key, and every modelled operation is a safe GET); SDKs and Packages
+  (nothing first-party on npm, PyPI or any registry, and no GitHub organization attributable to the
+  company); StatusPage and Deprecation (status.atsenatx.com NXDOMAIN, no policy, no RFC 8594 Sunset
+  or Deprecation headers on any response); Security and SecurityTxt (/.well-known/security.txt 404,
+  no disclosure page, no bug bounty — probe-security-programs.py returned vdp=none); TrustCenter and
+  Compliance (trust.atsenatx.com NXDOMAIN, and the company's own 29-page list contains no
+  compliance, certification or state-disclosure document); AgentCard (/.well-known/agent-card.json
+  and /.well-known/agent.json both 404, against a host that serves a real HTML 404 rather than an
+  SPA catch-all 200, so this is a true negative); MCPServer and ToolCrosswalk (no mcp namespace among
+  the 12 registered, /.well-known/mcp.json 404 — note the wp-abilities/v1 registry IS installed but
+  returns 401 anonymously, so no tool list is readable); AsyncAPI and Webhooks (no event, streaming
+  or webhook surface of any kind); OAuthScopes (no OAuth — /.well-known/oauth-authorization-server
+  and /.well-known/oauth-protected-resource both 404, so there is no scope surface to record);
+  ContentSignal (robots.txt is a bare Yoast block allowing everything, with no Content Signals
+  Policy, no AI-preference directives and no named AI-crawler rules — captured verbatim as evidence
+  in well-known/ but not claimed as a signal); ChangeLog (no dated API changelog; the newsroom is a
+  press-release feed, not release notes); RateLimits (no limit published and no rate-limit headers
+  observed); TermsOfService (no terms page exists on the site); and Postman, Pricing, SignUp, Login,
+  Roadmap, Documentation, DeveloperPortal, APIReference, GettingStarted, CLI, Sandbox, Components
+  and GitHubOrganization, none of which the company publishes. The Support pointer is the general
+  corporate contact form — there is no developer support channel.
+x-enrichment:
+  date: '2026-08-02'
+  status: enriched
+  artifacts_added: 16
+  pass: local-v1

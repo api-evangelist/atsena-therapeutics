@@ -1,0 +1,195 @@
+generated: '2026-08-02'
+method: derived
+source: >-
+  openapi/atsena-therapeutics-wp-rest-openapi.yml, the `_links` blocks and id-reference fields on
+  live records from https://atsenatx.com/wp-json/, and the /wp/v2/types and /wp/v2/taxonomies
+  discovery endpoints (fetched 2026-08-02)
+summary: >-
+  The entity graph of the Atsena Therapeutics content API. It is the stock WordPress content model
+  with no custom REST-exposed post types: five addressable entities (post, page, media, category,
+  tag) plus three discovery descriptors. Relationships are derived from the integer id-reference
+  fields on each record and from the HAL-style `_links` block WordPress emits, both of which are
+  observable without credentials.
+entities:
+  - name: Post
+    rest_base: posts
+    path: /wp/v2/posts
+    schema: '#/components/schemas/Post'
+    count: 55
+    identifier: {field: id, type: integer}
+    natural_key: {field: slug, type: string}
+    description: >-
+      A press release or company news item. This is the substantive dataset on the surface — the
+      company's public announcement record, including clinical milestones, financing and regulatory
+      designations.
+    key_fields: [id, date, modified, slug, link, title.rendered, content.rendered, excerpt.rendered,
+                 author, featured_media, categories, tags, acf, yoast_head_json]
+    permalink_pattern: 'https://atsenatx.com/press-release/{slug}/'
+  - name: Page
+    rest_base: pages
+    path: /wp/v2/pages
+    schema: '#/components/schemas/Page'
+    count: 29
+    identifier: {field: id, type: integer}
+    natural_key: {field: slug, type: string}
+    description: >-
+      A static site page. This is where the company's substance lives: the four programme pages
+      (XLRS, LCA1, USH1B, STGD), the pipeline, the two platform-technology pages (laterally spreading
+      AAV capsids, dual-vector technology), scientific approach, clinical trials, compassionate use,
+      patients, and the about/team/board/founders/investors/partners set.
+    key_fields: [id, date, modified, slug, link, title.rendered, content.rendered, parent,
+                 menu_order, featured_media, acf, yoast_head_json]
+    hierarchical: true
+  - name: MediaItem
+    rest_base: media
+    path: /wp/v2/media
+    schema: '#/components/schemas/MediaItem'
+    count: 176
+    identifier: {field: id, type: integer}
+    description: Media library item — figures, headshots, logos, programme diagrams and PDFs.
+    key_fields: [id, slug, title.rendered, alt_text, caption.rendered, media_type, mime_type,
+                 media_details, post, source_url]
+  - name: Category
+    rest_base: categories
+    path: /wp/v2/categories
+    schema: '#/components/schemas/Category'
+    count: 2
+    identifier: {field: id, type: integer}
+    description: >-
+      Post taxonomy. Only two terms exist — "Press Release" (id 4, 52 posts) and "Company News"
+      (id 6, 3 posts) — so this taxonomy is effectively a binary flag on the newsroom rather than a
+      rich classification.
+    hierarchical: true
+    terms:
+      - {id: 4, slug: press-release, name: Press Release, count: 52}
+      - {id: 6, slug: company-news, name: Company News, count: 3}
+  - name: Tag
+    rest_base: tags
+    path: /wp/v2/tags
+    schema: '#/components/schemas/Tag'
+    count: 0
+    identifier: {field: id, type: integer}
+    description: >-
+      Post tag taxonomy. Registered and queryable but carries zero terms — the site does not tag its
+      content. Recorded so the empty collection is not mistaken for a fetch failure.
+    hierarchical: false
+  - name: SearchResult
+    rest_base: search
+    path: /wp/v2/search
+    schema: '#/components/schemas/SearchResult'
+    count: 72
+    description: >-
+      A projection, not a stored entity: a lightweight {id, title, url, type, subtype} view across
+      posts and pages. 72 items are indexed, which reconciles with 55 posts + 29 pages minus the
+      items excluded from search.
+    projects: [Post, Page]
+  - name: ContentType
+    rest_base: types
+    path: /wp/v2/types
+    description: Discovery descriptor for a registered post type.
+  - name: Taxonomy
+    rest_base: taxonomies
+    path: /wp/v2/taxonomies
+    description: Discovery descriptor for a registered taxonomy.
+  - name: Status
+    rest_base: statuses
+    path: /wp/v2/statuses
+    description: Discovery descriptor for a registered post status.
+relationships:
+  - from: Post
+    to: Category
+    cardinality: has_many
+    via: categories
+    resolve: 'GET /wp/v2/categories/{id}'
+    evidence: 'Live record: {"id":1633, ..., "categories":[4]}'
+  - from: Post
+    to: Tag
+    cardinality: has_many
+    via: tags
+    resolve: 'GET /wp/v2/tags/{id}'
+    note: Always empty in practice — no tag terms exist.
+  - from: Post
+    to: MediaItem
+    cardinality: has_one
+    via: featured_media
+    resolve: 'GET /wp/v2/media/{id}'
+    note: 0 means no featured image.
+  - from: Page
+    to: MediaItem
+    cardinality: has_one
+    via: featured_media
+    resolve: 'GET /wp/v2/media/{id}'
+  - from: Page
+    to: Page
+    cardinality: belongs_to
+    via: parent
+    resolve: 'GET /wp/v2/pages/{id}'
+    evidence: >-
+      Self-referential hierarchy, two levels deep, verified across all 29 pages: /about/ (id 9)
+      parents /about/overview/, /about/team/, /about/bod/, /about/founders/, /about/sab/,
+      /about/investors/ and /about/partners/; /programs/ (id 20) parents /programs/pipeline/,
+      /programs/xlrs/, /programs/lca1/, /programs/ush1b/ and /programs/stgd/; /our-approach/ (id 570)
+      parents /our-approach/scientific-approach/, /our-approach/laterally-spreading-aav/ and
+      /our-approach/dual-vector-technology/; /news/ (id 26) parents /news/press-releases/ and
+      /news/presentations-and-publications/. 0 means top level.
+  - from: MediaItem
+    to: Post
+    cardinality: belongs_to
+    via: post
+    resolve: 'GET /wp/v2/posts/{id}'
+    note: >-
+      Nullable. The attachment parent may also be a Page id, so a caller resolving this field must
+      be prepared to fall back from /wp/v2/posts/{id} to /wp/v2/pages/{id}.
+  - from: Category
+    to: Category
+    cardinality: belongs_to
+    via: parent
+    note: Hierarchical taxonomy, but both live terms are top level (parent 0).
+  - from: Post
+    to: User
+    cardinality: belongs_to
+    via: author
+    resolve: 'GET /wp/v2/users/{id}'
+    status: unresolvable
+    note: >-
+      The referenced entity is NOT retrievable — /wp/v2/users returns HTTP 401
+      rest_user_cannot_view anonymously. The id is present on every record but dangles for an
+      unauthenticated caller. The author name is still obtainable indirectly via `yoast_head_json`
+      on the record or via the oEmbed response, both anonymous.
+  - from: Page
+    to: User
+    cardinality: belongs_to
+    via: author
+    status: unresolvable
+    note: Same as Post.author.
+traversal:
+  hal_links: >-
+    Every record carries a `_links` block with `targetHints.allow` naming the methods available to
+    the caller — observed as ["GET"] anonymously, which independently confirms the surface is
+    read-only for third parties. Relations observed on a live post: self, collection, about, author,
+    replies, version-history, predecessor-version, wp:attachment, wp:term and curies.
+    `wp:featuredmedia` appears additionally when the record has a featured image set. `?_embed`
+    inlines the linked resources into an `_embedded` object in one request.
+  example: 'GET /wp/v2/posts?per_page=1&_embed'
+absent_from_rest:
+  - name: team
+    detail: >-
+      A `team` custom post type exists on the site — https://atsenatx.com/team-sitemap.xml is listed
+      in the Yoast sitemap index — but it does NOT appear in /wp/v2/types and has no REST route. The
+      leadership, board, founders and scientific-advisory roster is therefore published to the web
+      but is not machine-readable through this API. This is the single most significant gap in the
+      surface, and it is a provider configuration choice (show_in_rest off for that type), not a
+      harvest miss.
+  - name: comments
+    detail: Registered but disabled site-wide (HTTP 403 rest_comment_disabled); no comment data exists.
+  - name: users
+    detail: Registered but closed to anonymous callers (HTTP 401).
+notes: >-
+  No `subway/` visual exists for this repo. There are no custom fields exposed beyond the opaque
+  `acf` object, whose internal shape varies per record and is not schematised by the provider, so it
+  is modelled as a free-form object rather than guessed at.
+x-evidence:
+  fetched: '2026-08-02'
+  entities: 9
+  relationships: 10
+  unresolvable_relationships: 2

@@ -1,0 +1,37 @@
+generated: '2026-08-02'
+method: generated
+source: openapi/atsena-therapeutics-wp-rest-openapi.yml
+note: >-
+  Packaged agent skills for the Atsena Therapeutics content API. Every operationId referenced below
+  exists verbatim in openapi/atsena-therapeutics-wp-rest-openapi.yml, which is itself derived from
+  the route index the site publishes at https://atsenatx.com/wp-json/. Atsena Therapeutics publishes
+  no skills of its own and no AGENTS.md — https://atsenatx.com/llms.txt and
+  https://atsenatx.com/AGENTS.md both returned HTTP 404 on 2026-08-02. Each skill encodes the same
+  hard-won facts: the gated surfaces are permanent, paging past the end is a 400 rather than an empty
+  array, `author` is unresolvable, and the people roster is not on the API at all.
+skills:
+  - file: atsena-therapeutics-track-news.md
+    name: Track Atsena Therapeutics news and regulatory milestones
+    description: >-
+      Incrementally pull press releases and company news by category with modified_after sync,
+      correct pagination limits and featured-image resolution, plus the citation rules clinical and
+      regulatory content requires.
+    api: openapi/atsena-therapeutics-wp-rest-openapi.yml
+    operations: [listCategories, listPosts, getPost, listMedia, getMediaItem]
+  - file: atsena-therapeutics-pipeline-brief.md
+    name: Assemble an Atsena Therapeutics pipeline and platform brief
+    description: >-
+      Walk the two-level page hierarchy to gather the four clinical programmes (ATSN-201/XLRS,
+      ATSN-101/LCA1, ATSN-301/USH1B, ATSN-401/Stargardt), the pipeline and the two AAV platform
+      pages, cross-checked against the newsroom for staleness.
+    api: openapi/atsena-therapeutics-wp-rest-openapi.yml
+    operations: [getRouteIndex, listTypes, listPages, getPage, listPosts, searchContent, getMediaItem]
+  - file: atsena-therapeutics-content-sync.md
+    name: Mirror the Atsena Therapeutics site content
+    description: >-
+      Complete resumable pull of every anonymously readable record — 55 posts, 29 pages, 176 media,
+      2 categories — in six requests, with incremental sync, field trimming and an explicit
+      stop-list of the permanently gated surfaces.
+    api: openapi/atsena-therapeutics-wp-rest-openapi.yml
+    operations: [getRouteIndex, listTypes, listTaxonomies, listStatuses, listPosts, listPages,
+                 listMedia, listCategories, listTags, searchContent, getOembed]

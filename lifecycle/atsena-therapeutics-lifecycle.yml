@@ -1,0 +1,85 @@
+generated: '2026-08-02'
+method: derived
+source: >-
+  Live probes of https://atsenatx.com/ and https://atsenatx.com/wp-json/ on 2026-08-02
+summary: >-
+  Atsena Therapeutics is a clinical-stage gene therapy company and does not run an API programme.
+  There is no developer portal, no published versioning policy, no deprecation policy, no SLA and no
+  status page. What follows records the observable lifecycle posture of the one live API surface —
+  the WordPress REST API behind the corporate site — and the negative results are as much the finding
+  as the positive ones.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  policy_url: null
+  detail: >-
+    The version is carried in the namespace segment and each of the 12 registered namespaces versions
+    independently: wp/v2, wp-abilities/v1, oembed/1.0, wp-site-health/v1, wp-block-editor/v1,
+    yoast/v1, redirection/v1, cookieyes/v1, cky/v1, duplicate-post/v1, wpe/cache-plugin/v1 and
+    wpe_sign_on_plugin/v1. No header, date or query-parameter version negotiation exists. These are
+    WordPress platform conventions, not a provider-published policy.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No RFC 8594 `Sunset` header and no `Deprecation` header was observed on any response, and the
+    provider publishes no deprecation policy. Version movement on this surface is whatever the
+    WordPress core upgrade cycle does to it, with no notice to callers.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  detail: No service-level agreement or availability commitment of any kind is published.
+status_page: null
+status_page_probes:
+  - {host: 'https://status.atsenatx.com/', result: NXDOMAIN}
+  - {host: 'https://trust.atsenatx.com/', result: NXDOMAIN}
+  - {host: 'https://api.atsenatx.com/', result: NXDOMAIN}
+  - {host: 'https://docs.atsenatx.com/', result: NXDOMAIN}
+  - {host: 'https://developer.atsenatx.com/', result: NXDOMAIN}
+changelog:
+  url: null
+  detail: >-
+    No API changelog and no release notes. The News section
+    (https://atsenatx.com/news/) and its Press Releases child
+    (https://atsenatx.com/news/press-releases/) are a corporate press-release feed with RSS at
+    https://atsenatx.com/feed/ — a company-news surface, not a release-notes surface. No
+    changelog/ artifact is emitted because there is nothing dated and API-scoped to structure.
+support:
+  developer_support: null
+  general_contact: https://atsenatx.com/contact/
+  detail: >-
+    No developer support channel of any kind — no forum, no community, no developer mailing list, no
+    support email for API use. The general corporate contact form is the only inbound channel.
+rate_limits:
+  published: false
+  detail: >-
+    No rate-limit headers on any response and no published quota. robots.txt requests
+    `Crawl-delay: 10`, which is advisory crawler guidance rather than an API budget. Cloudflare and
+    WP Engine front the origin and may throttle without advertising a limit.
+infrastructure:
+  cdn: Cloudflare
+  host: WP Engine
+  evidence: '`server: cloudflare` and `x-powered-by: WP Engine` on every wp-json response.'
+company_stage:
+  status: active
+  detail: >-
+    Clinical-stage and actively maintained. The most recent press release at the time of this pass
+    was dated 2026-07-23 ("Atsena Therapeutics Receives Orphan Designation from the European
+    Medicines Agency (EMA) for ATSN-101 and ATSN-201"), with 55 posts in the collection and the
+    post sitemap last modified 2026-07-22.
+  evidence: 'https://atsenatx.com/wp-json/wp/v2/posts (HTTP 200, X-WP-Total 55, most recent 2026-07-23)'
+content_freshness:
+  posts: 55
+  pages: 29
+  media: 176
+  categories: 2
+  tags: 0
+  search_index: 72
+  measured_at: '2026-08-02'
+  detail: >-
+    Counts read from the `X-WP-Total` header on each collection. The two categories are
+    "Press Release" (52 posts) and "Company News" (3 posts).
+x-evidence:
+  fetched: '2026-08-02'

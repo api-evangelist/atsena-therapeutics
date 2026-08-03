@@ -1,0 +1,120 @@
+# Atsena Therapeutics
+
+> Atsena Therapeutics is a clinical-stage gene therapy company in Durham, North Carolina, developing
+> genetic medicines for inherited retinal diseases with the goal of reversing or preventing blindness.
+> Founded by ocular gene therapy pioneers Shannon Boye and Sanford Boye, it builds on two proprietary
+> AAV delivery platforms: a laterally spreading AAV.SPR capsid that reaches retinal cells without the
+> surgical trauma of a subretinal bleb, and a dual-vector technology that splits genes too large for a
+> single AAV across two vectors. Its pipeline includes ATSN-201 for X-linked retinoschisis in a pivotal
+> Phase 3 trial, ATSN-101 for LCA1 advancing to a pivotal trial with partner Nippon Shinyaku, and
+> IND-enabling programmes ATSN-301 for Usher syndrome 1B and ATSN-401 for Stargardt disease.
+
+Generated: 2026-08-02 by the API Evangelist enrichment pipeline. Method: generated.
+Source: apis.yml plus the artifacts in this repository, all derived from live probes of atsenatx.com.
+This file was authored by API Evangelist. Atsena Therapeutics does not publish an llms.txt of its own
+(https://atsenatx.com/llms.txt returned HTTP 404 on 2026-08-02).
+
+## What is and is not here
+
+Atsena Therapeutics runs **no developer programme**. There is no developer portal, no API
+documentation, no API reference, no SDK, no CLI, no sandbox, no API key, no OAuth, no MCP server, no
+agent card, no webhooks and no support channel for developers. Those are verified absences, each
+probed on 2026-08-02, not gaps in this record.
+
+What does exist is one real, live, anonymously readable API: the **WordPress REST API** behind the
+corporate website. It is the content-management API of a marketing site rather than a product API —
+but it is callable without credentials, it returns the company's full press-release and programme
+content as JSON, and it is the only machine-readable surface the company exposes. Treat it as such:
+it carries no SLA, no versioning policy and no notice of change.
+
+## APIs
+
+- [Atsena Therapeutics Content API](https://atsenatx.com/wp-json/): The anonymously readable
+  WordPress REST API behind atsenatx.com. 233 routes across 12 namespaces; the wp/v2 content routes
+  are open, writes and administrative routes are gated behind WordPress application passwords.
+- [WordPress REST API handbook](https://developer.wordpress.org/rest-api/): The upstream contract
+  this surface implements. The provider publishes no documentation of its own, so this is the
+  reference for semantics.
+
+## Specs
+
+- [OpenAPI 3.1 (derived)](openapi/atsena-therapeutics-wp-rest-openapi.yml): 20 anonymous read
+  operations across posts, pages, media, categories, tags, search, discovery and oEmbed. Derived by
+  API Evangelist from the provider's live route index; every path, parameter, default and enum comes
+  from that document.
+- [WordPress route-discovery document (verbatim)](openapi/atsena-therapeutics-wp-rest-discovery-original.json):
+  The raw 233-route index as served, harvested unmodified.
+- [OpenAPI Overlay](overlays/atsena-therapeutics-wp-rest-overlay.yaml): The API Evangelist
+  annotation layer over the derived spec.
+
+## How to call it
+
+Base URL: `https://atsenatx.com/wp-json`
+
+- Latest press releases: `GET /wp/v2/posts?per_page=10&orderby=date&order=desc`
+- Only the newsroom proper: add `&categories=4` (Press Release, 52 posts) or `&categories=6`
+  (Company News, 3 posts)
+- Programme pages: `GET /wp/v2/pages?parent=20` (XLRS, LCA1, USH1B, STGD, pipeline)
+- Platform technology pages: `GET /wp/v2/pages?parent=570`
+- Leadership and about pages: `GET /wp/v2/pages?parent=9`
+- Search everything: `GET /wp/v2/search?search=<term>` (72 items indexed)
+- Trim the payload: append `&_fields=id,title,link,date`
+- Inline linked media and terms: append `&_embed`
+
+Pagination is `page` + `per_page` (max 100). Read `X-WP-Total` and `X-WP-TotalPages`, or follow the
+RFC 8288 `Link rel="next"` header — paging past the last page returns HTTP 400
+`rest_post_invalid_page_number`, not an empty array. Responses cache for 600 seconds; robots.txt
+requests a crawl delay of 10 seconds, which is the only throughput guidance the company publishes.
+
+## Gotchas
+
+- `author` on any record is an integer that **cannot be resolved** — `/wp/v2/users` returns HTTP 401.
+  Read the author name from `yoast_head_json` on the record, or from the oEmbed response.
+- The **leadership and board roster is not on the API**. A `team` custom post type exists (it appears
+  in the Yoast sitemap index at `/team-sitemap.xml`) but is not registered for REST, so the roster is
+  on the web and not in JSON. This is the biggest gap in the surface.
+- Tags are registered but the taxonomy holds **zero terms** — an empty array is correct, not an error.
+- Comments are disabled site-wide (HTTP 403 `rest_comment_disabled`).
+- Errors are the WordPress envelope `{code, message, data.status}`, **not** RFC 9457
+  `application/problem+json`. Branch on `code`, never on `message`.
+- Paths outside `/wp-json` return the site's **HTML** 404 page, not JSON. Do not assume a JSON body
+  on a non-2xx.
+- Only `Last-Modified` is issued, no `ETag`, so revalidate with `If-Modified-Since`.
+
+## Artifacts
+
+- [Authentication profile](authentication/atsena-therapeutics-authentication.yml): anonymous reads;
+  application passwords for gated routes; no OAuth, no OIDC, no API keys.
+- [API conventions](conventions/atsena-therapeutics-conventions.yml): pagination, sparse fieldsets,
+  embedding, caching, CORS, versioning, error envelope. No idempotency contract exists on this surface.
+- [Error catalogue](errors/atsena-therapeutics-problem-types.yml): ten problem types, nine of them
+  triggered live against the running site.
+- [Data model](data-model/atsena-therapeutics-data-model.yml): nine entities, ten relationships, two
+  of which are unresolvable anonymously.
+- [Lifecycle](lifecycle/atsena-therapeutics-lifecycle.yml): no versioning policy, no deprecation
+  policy, no SLA, no status page, no changelog.
+- [Conformance](conformance/atsena-therapeutics-conformance.yml): 25 standards evaluated, 9 met —
+  all inherited from WordPress, Cloudflare and WP Engine rather than authored by the company.
+- [Well-known index](well-known/atsena-therapeutics-well-known.yml): every documented discovery path
+  probed; all 404 except robots.txt, the sitemap and the REST route index.
+- [Domain security](security/atsena-therapeutics-domain-security.yml): TLS 1.3, HSTS with preload and
+  a two-year max-age, SPF and DMARC p=reject; no DNSSEC and no CAA.
+- [Agent skills](skills/_index.yml): packaged operating instructions for the three flows this surface
+  genuinely supports.
+
+## Company
+
+- [Website](https://atsenatx.com/)
+- [Company overview](https://atsenatx.com/about/overview/)
+- [Pipeline](https://atsenatx.com/programs/pipeline/)
+- [Technology](https://atsenatx.com/our-approach/) — [laterally spreading AAV](https://atsenatx.com/our-approach/laterally-spreading-aav/), [dual vector](https://atsenatx.com/our-approach/dual-vector-technology/)
+- [Clinical trials](https://atsenatx.com/clinical-trials/)
+- [For patients](https://atsenatx.com/for-patients/)
+- [Compassionate use and expanded access](https://atsenatx.com/compassionate-use-and-expanded-access/)
+- [News](https://atsenatx.com/news/) — [press releases](https://atsenatx.com/news/press-releases/), [presentations and publications](https://atsenatx.com/news/presentations-and-publications/)
+- [RSS feed](https://atsenatx.com/feed/)
+- [Founders](https://atsenatx.com/about/founders/) · [Team](https://atsenatx.com/about/team/) · [Board](https://atsenatx.com/about/bod/) · [Scientific advisory boards](https://atsenatx.com/about/sab/)
+- [Investors](https://atsenatx.com/about/investors/) · [Partners](https://atsenatx.com/about/partners/)
+- [Careers](https://atsenatx.com/careers/) · [Contact](https://atsenatx.com/contact/)
+- [Privacy policy](https://atsenatx.com/privacy-policy/)
+- [LinkedIn](https://www.linkedin.com/company/atsenatx)

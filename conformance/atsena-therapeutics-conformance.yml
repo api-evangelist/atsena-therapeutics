@@ -1,0 +1,152 @@
+generated: '2026-08-02'
+method: derived
+source: >-
+  openapi/atsena-therapeutics-wp-rest-openapi.yml, well-known/atsena-therapeutics-well-known.yml,
+  security/atsena-therapeutics-domain-security.yml and live probes on 2026-08-02
+summary: >-
+  Cross-cutting standards posture of the Atsena Therapeutics corporate web/API surface. Every
+  technical standard below is inherited from WordPress, Cloudflare or WP Engine rather than authored
+  by Atsena — the company runs no API programme and makes no conformance claim anywhere on its site.
+  The negatives are recorded as deliberately as the positives; each carries the probe that produced
+  it.
+standards:
+  - id: openapi
+    conforms: false
+    evidence: >-
+      The provider publishes no OpenAPI. /openapi.json, /openapi.yaml, /swagger.json, /api-docs and
+      /api all returned 404 on atsenatx.com, and api.atsenatx.com, docs.atsenatx.com and
+      developer.atsenatx.com do not resolve. The spec in openapi/ is derived by API Evangelist from
+      the live WordPress route-discovery document.
+  - id: graphql
+    conforms: false
+    evidence: '/graphql returned 404; no GraphQL namespace is registered in the route index.'
+  - id: asyncapi
+    conforms: false
+    evidence: >-
+      No event, streaming or webhook surface is published or advertised. No AsyncAPI, no webhook
+      catalogue, no callback registrations in the route index. asyncapi/ is deliberately not emitted.
+  - id: mcp-model-context-protocol
+    conforms: false
+    evidence: >-
+      No `mcp` namespace in the route index (12 namespaces, none MCP), /.well-known/mcp.json returned
+      404, and no hosted MCP server is advertised. The WordPress Abilities registry
+      (wp-abilities/v1) IS registered — the agent-facing capability surface an MCP adapter would
+      bind to — but its abilities and categories collections reject anonymous callers with HTTP 401,
+      so no tool list can be read.
+  - id: a2a-agent-card
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json both returned 404. The host serves a
+      real HTML 404 page rather than a single-page-app catch-all 200, so this is a true negative and
+      not an ambiguous probe. No a2a/ artifact is written.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use the WordPress envelope {code, message, data.status} served as application/json, not
+      application/problem+json. No `type` URI, no `instance`, no problem-type registry.
+  - id: rfc8288-web-linking
+    conforms: true
+    evidence: >-
+      'link: <https://atsenatx.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"' observed on
+      paginated collections, and 'rel="alternate"; type=text/html' on item routes.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: '/.well-known/security.txt returned 404.'
+  - id: rfc9727-api-catalog
+    conforms: false
+    evidence: '/.well-known/api-catalog returned 404.'
+  - id: rfc8414-oauth-authorization-server-metadata
+    conforms: false
+    evidence: '/.well-known/oauth-authorization-server returned 404.'
+  - id: rfc9728-oauth-protected-resource-metadata
+    conforms: false
+    evidence: '/.well-known/oauth-protected-resource returned 404.'
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      No OAuth anywhere on this host. The only advertised scheme is WordPress application passwords
+      (HTTP Basic), an administrative credential with no third-party issuance path.
+  - id: oidc
+    conforms: false
+    evidence: '/.well-known/openid-configuration returned 404.'
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: No Sunset or Deprecation header observed on any response.
+  - id: rfc7234-http-caching
+    conforms: true
+    evidence: >-
+      'cache-control: max-age=600, must-revalidate' on collections and 'last-modified' on item
+      routes, enabling If-Modified-Since revalidation. No ETag is issued, so If-None-Match is
+      unavailable.
+  - id: cors
+    conforms: true
+    evidence: >-
+      Access-Control-Allow-Headers (Authorization, X-WP-Nonce, Content-Disposition, Content-MD5,
+      Content-Type) and Access-Control-Expose-Headers (X-WP-Total, X-WP-TotalPages, Link) present;
+      an OPTIONS preflight on /wp/v2/posts returns 200 with 'Allow: GET'.
+  - id: oembed-1.0
+    conforms: true
+    evidence: >-
+      /wp-json/oembed/1.0/embed returns a valid oEmbed 1.0 document (version, provider_name,
+      provider_url, author_name, title, type, html) for URLs on atsenatx.com.
+  - id: sitemaps-org-0.9
+    conforms: true
+    evidence: >-
+      https://atsenatx.com/sitemap_index.xml is a valid sitemapindex naming post, page, team and
+      category child sitemaps.
+  - id: content-signals-policy
+    conforms: false
+    evidence: >-
+      robots.txt carries no Content Signals Policy block, no AI-preference directives and no named
+      AI-crawler rules. It is a bare Yoast block — 'User-agent: *' with an empty 'Disallow:',
+      allowing everything, plus 'Crawl-delay: 10'. The provider expresses no AI-access posture, so no
+      ContentSignal pointer is emitted.
+  - id: hsts
+    conforms: true
+    evidence: >-
+      'strict-transport-security: includeSubDomains; preload; max-age=63072000' (two years, with
+      preload) on atsenatx.com.
+  - id: tls-1-3
+    conforms: true
+    evidence: >-
+      TLSv1.3 negotiated on atsenatx.com; certificate valid to 2026-10-17. See
+      security/atsena-therapeutics-domain-security.yml.
+  - id: dnssec
+    conforms: false
+    evidence: No DNSSEC on atsenatx.com (probed).
+  - id: caa
+    conforms: false
+    evidence: No CAA records on atsenatx.com (probed).
+  - id: spf
+    conforms: true
+    evidence: SPF record present on atsenatx.com (probed).
+  - id: dmarc
+    conforms: true
+    evidence: 'DMARC present with policy p=reject on atsenatx.com (probed).'
+regulatory_compliance:
+  published: false
+  detail: >-
+    Atsena Therapeutics publishes no compliance page. Its 29 site pages were enumerated from its own
+    /wp/v2/pages collection and contain no compliance, code-of-conduct, transparency or
+    state-disclosure document — unlike several peers in this cohort, which publish a California
+    Health and Safety Code §§119400–119402 declaration. The only governance-adjacent document on the
+    site is the privacy policy. No `Compliance` pointer is emitted.
+  programs: []
+  security_certifications: []
+  security_certifications_note: >-
+    No SOC 2, ISO 27001, HIPAA, PCI DSS or FedRAMP attestation is published, and no trust centre
+    exists (trust.atsenatx.com does not resolve). This is expected: the company handles clinical
+    trial data under its clinical partners' governance, not through a public-facing security
+    programme.
+  clinical_context: >-
+    Regulatory posture that IS evidenced, from the company's own press releases rather than a
+    compliance page: FDA and EMA interactions on its lead programmes, including EMA orphan
+    designation for ATSN-101 and ATSN-201 (2026-07-23) and a pivotal Phase 3 trial for ATSN-201.
+    These are therapeutic-development regulatory milestones, not API or information-security
+    conformance, and are recorded here only so the empty `programs` list above is not misread as an
+    absence of regulatory engagement.
+x-evidence:
+  fetched: '2026-08-02'
+  standards_evaluated: 25
+  conforms_true: 9
+  conforms_false: 16

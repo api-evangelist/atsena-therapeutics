@@ -1,0 +1,148 @@
+generated: '2026-08-02'
+method: derived
+source: >-
+  openapi/atsena-therapeutics-wp-rest-openapi.yml plus live request/response observation against
+  https://atsenatx.com/wp-json/ on 2026-08-02
+summary: >-
+  Cross-cutting request/response semantics of the one live API surface on atsenatx.com. Atsena
+  Therapeutics publishes no API conventions of its own — no developer docs, no style guide, no
+  reference. Everything below is either WordPress core platform behaviour or a fact observed on the
+  wire, and each entry says which. The upstream contract these conventions inherit from is
+  documented at https://developer.wordpress.org/rest-api/.
+authentication:
+  style: none
+  detail: >-
+    Anonymous for every operation in the derived spec. See
+    authentication/atsena-therapeutics-authentication.yml for the gated surfaces and the
+    application-password scheme that guards them.
+base_url: https://atsenatx.com/wp-json
+media_type:
+  request: application/json
+  response: application/json; charset=UTF-8
+  detail: JSON only. No XML, CSV or protobuf representation is offered.
+pagination:
+  style: page-number
+  params:
+    - name: page
+      default: 1
+      minimum: 1
+    - name: per_page
+      default: 10
+      minimum: 1
+      maximum: 100
+  response_headers:
+    - name: X-WP-Total
+      detail: Total records in the collection.
+    - name: X-WP-TotalPages
+      detail: Total pages at the current per_page.
+    - name: Link
+      detail: 'RFC 8288 web linking with rel="next" and rel="prev".'
+  cors_exposed: >-
+    All three are named in `Access-Control-Expose-Headers`, so a browser client can read them
+    cross-origin.
+  observed: >-
+    GET /wp/v2/posts?per_page=2&page=1 returned x-wp-total 55, x-wp-totalpages 28 and
+    `link: <https://atsenatx.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"`.
+  offset_alternative: >-
+    An `offset` parameter is also accepted on collections; when supplied it overrides `page`. Deep
+    paging past the last page returns HTTP 400 rest_post_invalid_page_number rather than an empty array.
+filtering_and_sorting:
+  search: '`search` free-text on every collection; `/wp/v2/search` searches across posts and pages at once.'
+  order: '`order` (asc|desc) and `orderby` (date, id, include, title, slug, relevance, modified, author).'
+  date_windows: '`after` / `before` / `modified_after` / `modified_before`, all ISO 8601.'
+  inclusion: '`include` / `exclude` by id, `slug` by slug, `parent` / `parent_exclude` on hierarchical types.'
+  taxonomy: '`categories` / `categories_exclude` / `tags` / `tags_exclude` on /wp/v2/posts.'
+sparse_fieldsets:
+  supported: true
+  param: _fields
+  detail: >-
+    `?_fields=id,title,link` trims the response to the named properties. Applies to every collection
+    and item route. This is the closest thing this surface has to field expansion.
+  observed: 'GET /wp/v2/pages?per_page=100&_fields=id,slug,link,title,parent returned only those keys.'
+embedding:
+  supported: true
+  param: _embed
+  detail: >-
+    `?_embed` inlines linked resources (featured media, terms) from the `_links` block into an
+    `_embedded` object, saving a follow-up request. `_links` is HAL-shaped and present on every
+    record.
+context:
+  param: context
+  values: [view, embed, edit]
+  default: view
+  detail: >-
+    Controls the field set returned. `edit` requires credentials and returns HTTP 401
+    rest_forbidden_context anonymously (observed); `embed` returns the trimmed representation used
+    by _embed.
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    There is NO idempotency contract on this surface — no Idempotency-Key header, no request-id
+    dedupe, no published retry semantics, and nothing in the route-discovery document that resembles
+    one. This is not an oversight in the harvest: WordPress core does not implement RFC-style
+    idempotency keys, and every operation catalogued here is a safe GET, which is idempotent only by
+    HTTP method semantics. No `Idempotency` pointer is emitted in apis.yml for this provider, because
+    emitting one would claim a capability that does not exist.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation-id header is issued. Responses carry Cloudflare's `cf-ray` and WP
+    Engine's `x-cache` / `x-cache-group` infrastructure headers, which are diagnostic for the CDN,
+    not a caller-facing trace identifier.
+caching:
+  cache_control: 'max-age=600, must-revalidate'
+  detail: >-
+    Ten-minute shared-cache TTL applied by WP Engine (`x-cacheable: SHORT`, `x-cache: HIT|MISS`).
+    Item routes return `Last-Modified`, so `If-Modified-Since` revalidation is possible. No `ETag` is
+    issued on any route, so `If-None-Match` is not available.
+  x_robots_tag: >-
+    Responses carry `x-robots-tag: noindex` — the API surface is excluded from search indexing even
+    though the underlying content is not.
+cors:
+  allow_headers: [Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type]
+  expose_headers: [X-WP-Total, X-WP-TotalPages, Link]
+  allow_methods_observed: [GET]
+  detail: >-
+    An OPTIONS preflight against /wp/v2/posts returns 200 with `Allow: GET`, confirming that the
+    anonymous surface is read-only at the method level.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  detail: >-
+    The version is a namespace segment, and each namespace versions independently (wp/v2,
+    wp-abilities/v1, oembed/1.0, wp-site-health/v1, wp-block-editor/v1). There is no header, date or
+    query-parameter version negotiation. See lifecycle/atsena-therapeutics-lifecycle.yml.
+error_envelope:
+  content_type: application/json
+  shape: '{"code": "<string>", "message": "<string>", "data": {"status": <integer>}}'
+  rfc9457: false
+  detail: >-
+    Not problem+json — no `type` URI, no `instance`, no `detail`. `code` is the stable machine
+    discriminator; `message` is human prose. Validation failures add `data.params` and `data.details`
+    keyed by parameter name. See errors/atsena-therapeutics-problem-types.yml.
+  caution: >-
+    Paths OUTSIDE /wp-json (for example /openapi.json or /.well-known/security.txt) return the site's
+    HTML 404 page, not this envelope. A client must not assume JSON on a non-2xx.
+rate_limiting:
+  documented: false
+  headers: []
+  detail: >-
+    No rate-limit headers were observed on any response (no X-RateLimit-*, no RateLimit-*, no
+    Retry-After) and no limit is published. Cloudflare and WP Engine sit in front of the origin and
+    may throttle abusive traffic without advertising a budget. robots.txt requests `Crawl-delay: 10`,
+    which is the only throughput guidance the provider expresses anywhere — advisory, and aimed at
+    crawlers rather than API clients. No rate-limits/ artifact is emitted because there is no
+    published limit to record.
+metadata:
+  detail: >-
+    Records carry an `acf` object (Advanced Custom Fields) and Yoast SEO's `yoast_head` /
+    `yoast_head_json`. These are site-authoring extensions, not a caller-writable metadata facility.
+cross_links:
+  authentication: authentication/atsena-therapeutics-authentication.yml
+  errors: errors/atsena-therapeutics-problem-types.yml
+  lifecycle: lifecycle/atsena-therapeutics-lifecycle.yml
+  data_model: data-model/atsena-therapeutics-data-model.yml
+  conformance: conformance/atsena-therapeutics-conformance.yml
+x-evidence:
+  fetched: '2026-08-02'

@@ -1,0 +1,82 @@
+generated: '2026-08-02'
+method: searched
+source: https://atsenatx.com/.well-known/
+host: https://atsenatx.com
+note: >-
+  Atsena Therapeutics is a clinical-stage gene therapy company with no developer product API. The
+  /.well-known/ surface below belongs to the corporate WordPress site (atsenatx.com, hosted on WP
+  Engine behind Cloudflare). Every documented discovery path returned 404 — this is a true negative,
+  not a probe failure: the host answers unmatched paths with a real HTML 404 rather than a
+  single-page-app catch-all 200, and the two 200s recorded under `other` prove the probe itself
+  reached the origin. Every status below was observed live on 2026-08-02.
+documents:
+  - path: /.well-known/security.txt                 # RFC 9116
+    status: 404
+  - path: /.well-known/openid-configuration         # OIDC discovery
+    status: 404
+  - path: /.well-known/oauth-authorization-server   # RFC 8414
+    status: 404
+  - path: /.well-known/oauth-protected-resource     # RFC 9728
+    status: 404
+  - path: /.well-known/api-catalog                  # RFC 9727
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json              # A2A 1.0.0 canonical
+    status: 404
+  - path: /.well-known/agent.json                   # A2A pre-0.3 legacy
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/change-password              # W3C well-known change-password
+    status: 404
+  - path: /.well-known/host-meta                    # RFC 6415
+    status: 404
+  - path: /.well-known/nodeinfo
+    status: 404
+  - path: /.well-known/gpc.json                     # Global Privacy Control
+    status: 404
+  - path: /.well-known/dnt-policy.txt
+    status: 404
+other:
+  - path: /robots.txt
+    status: 200
+    file: atsena-therapeutics-robots.txt
+    kind: RobotsTxt
+    note: >-
+      Captured verbatim. A bare Yoast-generated block — `User-agent: *` with an empty `Disallow:`
+      (allow everything), a `Crawl-delay: 10`, and the sitemap pointer. It carries NO Content Signals
+      Policy, NO AI-preference directives and NO named AI-crawler rules (no GPTBot, ClaudeBot,
+      Google-Extended, Applebot-Extended or meta-externalagent entries). It is therefore recorded as
+      evidence but deliberately NOT wired as a ContentSignal pointer — the provider expresses no
+      AI-access posture here, and claiming one would credit a signal that does not exist.
+  - path: /sitemap.xml
+    status: 200
+    note: Redirects to /sitemap_index.xml.
+  - path: /sitemap_index.xml
+    status: 200
+    kind: Sitemap
+    note: >-
+      Yoast-generated index naming four child sitemaps — post-sitemap.xml, page-sitemap.xml,
+      team-sitemap.xml and category-sitemap.xml. Note the `team` custom post type appears in the
+      sitemap but NOT in /wp-json/wp/v2/types, so the leadership/board roster is published to the
+      web but is not exposed on the REST surface (show_in_rest is off for that type).
+  - path: /wp-json/
+    status: 200
+    kind: RESTDiscovery
+    content_type: application/json
+    note: >-
+      The WordPress REST API route-discovery document — 233 routes across 12 namespaces. Harvested
+      verbatim to openapi/atsena-therapeutics-wp-rest-discovery-original.json and derived into
+      openapi/atsena-therapeutics-wp-rest-openapi.yml. It advertises exactly one authentication
+      scheme, `application-passwords`, with authorization at
+      https://atsenatx.com/wp-admin/authorize-application.php.
+x-evidence:
+  fetched: '2026-08-02'
+  probe_hosts:
+    - atsenatx.com
+  probe_note: >-
+    atsenatx.com is the only host in play. apis.yml declares no API baseURL other than the one this
+    pass added, and the derived OpenAPI has a single servers[] entry (https://atsenatx.com/wp-json)
+    on the same host, so there is no second origin to probe. api.atsenatx.com and docs.atsenatx.com
+    do not resolve.
