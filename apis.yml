@@ -39,31 +39,16 @@ tags:
 - Content API
 - WordPress
 apis:
-- aid: atsena-therapeutics:atsena-therapeutics-content-api
-  name: Atsena Therapeutics Content API
-  description: >-
-    The anonymously readable WordPress REST API behind atsenatx.com. It exposes Atsena Therapeutics
-    press releases and company news (posts), the program pages for ATSN-201/XLRS, ATSN-101/LCA1,
-    ATSN-301/USH1B and ATSN-401/Stargardt plus the pipeline and the two AAV platform-technology
-    pages (pages), the media library, post categories and tags, cross-content search, and the
-    type/taxonomy/status discovery endpoints. This is not a developer product Atsena markets; it is
-    the site's own content surface, published at /wp-json/ and verified on 2026-08-02 to return data
-    without credentials across all 20 modelled operations. The OpenAPI in this repo is derived from
-    that published route index. Writes and the privileged reads (users, settings, plugins,
-    templates, menus, the wp-abilities registry) are gated behind WordPress application passwords,
-    which no third party can obtain, and are deliberately not modelled.
+- aid: atsena-therapeutics:atsena-therapeutics-categories-api
+  name: Atsena Therapeutics Categories API
+  description: Post categories
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://atsenatx.com/wp-json
   tags:
-  - content
-  - press-releases
-  - clinical-programs
-  - wordpress
+  - Categories
   properties:
   - type: OpenAPI
-    url: openapi/atsena-therapeutics-wp-rest-openapi.yml
-  - type: Overlay
-    url: overlays/atsena-therapeutics-wp-rest-overlay.yaml
+    url: openapi/atsena-therapeutics-categories-api-openapi.yml
   - type: Authentication
     url: authentication/atsena-therapeutics-authentication.yml
   - type: Conventions
@@ -72,15 +57,132 @@ apis:
     url: errors/atsena-therapeutics-problem-types.yml
   - type: DataModel
     url: data-model/atsena-therapeutics-data-model.yml
-  x-contract-provenance: >-
-    Derived by the API Evangelist enrichment pipeline from the WordPress REST route index the site
-    publishes at https://atsenatx.com/wp-json/ (233 routes across 12 namespaces, harvested verbatim
-    to openapi/atsena-therapeutics-wp-rest-discovery-original.json) and verified against live
-    anonymous responses on 2026-08-02. Atsena Therapeutics publishes no developer documentation, no
-    API reference, no getting-started guide and no support channel for this surface, so no
-    Documentation/APIReference/GettingStarted/DeveloperPortal pointers are emitted — the humanURL
-    above is the upstream WordPress REST handbook that describes the wp/v2 contract this surface
-    implements.
+- aid: atsena-therapeutics:atsena-therapeutics-discovery-api
+  name: Atsena Therapeutics Discovery API
+  description: Route index, content types, taxonomies and post statuses
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-discovery-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-media-api
+  name: Atsena Therapeutics Media API
+  description: Media library items
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-media-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-oembed-api
+  name: Atsena Therapeutics O Embed API
+  description: oEmbed representation of site URLs
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - oEmbed
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-oembed-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-pages-api
+  name: Atsena Therapeutics Pages API
+  description: 'Static site pages: programs, technology, clinical trials, patients, about'
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-pages-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-posts-api
+  name: Atsena Therapeutics Posts API
+  description: Press releases and company news
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - Posts
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-posts-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-search-api
+  name: Atsena Therapeutics Search API
+  description: Cross-content search over posts and pages
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-search-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-tags-api
+  name: Atsena Therapeutics Tags API
+  description: Post tags
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-tags-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -126,7 +228,7 @@ common:
 - type: SecondaryMarket
   url: https://forgeglobal.com/atsena-therapeutics_stock/
 - type: OpenAPI
-  url: openapi/atsena-therapeutics-wp-rest-openapi.yml
+  url: openapi/_original/atsena-therapeutics-wp-rest-openapi.yml
 - type: Overlay
   url: overlays/atsena-therapeutics-wp-rest-overlay.yaml
 - type: Authentication
