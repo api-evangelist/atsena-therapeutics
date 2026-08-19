@@ -22,7 +22,7 @@ x-type: company
 x-source: harvest:secondary-market
 x-tier: enriched
 x-tier-reason: enrichment pass 2026-08-02
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-08-02'
 modified: '2026-08-02'
 tags:
