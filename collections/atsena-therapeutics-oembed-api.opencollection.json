@@ -1,0 +1,47 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Atsena Therapeutics Content API (WordPress REST API) O Embed API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "oEmbed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the oEmbed representation of a site URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/oembed/1.0/embed",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "maxwidth",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The URL of the resource for which to fetch oEmbed data."
+              }
+            ]
+          },
+          "docs": "Returns the oEmbed 1.0 document for a URL on atsenatx.com."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

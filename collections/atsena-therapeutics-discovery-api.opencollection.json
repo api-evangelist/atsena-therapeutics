@@ -1,0 +1,196 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Atsena Therapeutics Content API (WordPress REST API) Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the REST API route index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/"
+          },
+          "docs": "Returns the site name, URL, registered namespaces, the supported authentication schemes and every registered route with its methods and arguments. This is the document this OpenAPI was derived from."
+        },
+        {
+          "info": {
+            "name": "Get the wp/v2 namespace index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2"
+          },
+          "docs": "Returns the namespace descriptor and every route registered under wp/v2."
+        },
+        {
+          "info": {
+            "name": "List registered content types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2/types",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "List registered content types"
+        },
+        {
+          "info": {
+            "name": "List registered taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2/taxonomies",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to taxonomies associated with a specific post type."
+              }
+            ]
+          },
+          "docs": "List registered taxonomies"
+        },
+        {
+          "info": {
+            "name": "List registered post statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2/statuses",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "List registered post statuses"
+        },
+        {
+          "info": {
+            "name": "Get a single registered content type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "An identifier for the post type."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "An alphanumeric identifier for the post type."
+              }
+            ]
+          },
+          "docs": "Get a single registered content type"
+        },
+        {
+          "info": {
+            "name": "Get a single registered taxonomy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the taxonomy."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "query",
+                "description": "An alphanumeric identifier for the taxonomy."
+              }
+            ]
+          },
+          "docs": "Get a single registered taxonomy"
+        },
+        {
+          "info": {
+            "name": "Get a single registered post status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://atsenatx.com/wp-json/wp/v2/statuses/:status",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the status."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "An alphanumeric identifier for the status."
+              }
+            ]
+          },
+          "docs": "Get a single registered post status"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

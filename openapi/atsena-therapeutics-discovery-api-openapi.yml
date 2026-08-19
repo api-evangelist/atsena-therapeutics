@@ -1,0 +1,424 @@
+openapi: 3.2.0
+info:
+  title: Atsena Therapeutics Content API (WordPress REST API) Discovery API
+  version: wp/v2
+  description: 'The anonymously readable content API behind atsenatx.com, derived from the WordPress REST route index Atsena Therapeutics publishes at https://atsenatx.com/wp-json/. It exposes Atsena press releases and company news (posts), the program, technology, clinical-trial, patient and about pages (pages), the media library, post categories and tags, cross-content search, and the type/taxonomy/status discovery endpoints.
+
+
+    Atsena Therapeutics is a clinical-stage gene therapy company and runs no developer program: it publishes no developer documentation, no API reference, no support channel for this surface and no specification of its own. This document is a faithful derivation of the routes, parameters, defaults and enums the site itself advertises, restricted to the read operations verified to return HTTP 200 without credentials on 2026-08-02.
+
+
+    Deliberately not modelled: write operations (registered on the same routes but gated behind WordPress application passwords and administrative, not a public API offering); endpoints that reject anonymous callers (users, settings, plugins, templates, menus, and the wp-abilities/v1 registry, all HTTP 401); comments (disabled site-wide, HTTP 403); and the plugin namespaces (yoast/v1, redirection/v1, cookieyes/v1, wpe/*, wp-site-health/v1, wp-block-editor/v1), which are site-administration surfaces rather than content.'
+  contact:
+    name: Atsena Therapeutics
+    url: https://atsenatx.com/contact/
+  x-derived-from: https://atsenatx.com/wp-json/
+  x-derived-on: '2026-08-02'
+  x-api-evangelist-note: Derived by the API Evangelist enrichment pipeline from the provider-published WordPress REST route index; not authored or endorsed by Atsena Therapeutics.
+servers:
+- url: https://atsenatx.com/wp-json
+  description: Production
+security:
+- {}
+tags:
+- name: Discovery
+  description: Route index, content types, taxonomies and post statuses
+paths:
+  /:
+    get:
+      operationId: getRouteIndex
+      tags:
+      - Discovery
+      summary: Get the REST API route index
+      description: Returns the site name, URL, registered namespaces, the supported authentication schemes and every registered route with its methods and arguments. This is the document this OpenAPI was derived from.
+      security:
+      - {}
+      responses:
+        '200':
+          description: Route index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteIndex'
+  /wp/v2:
+    get:
+      operationId: getCoreNamespaceIndex
+      tags:
+      - Discovery
+      summary: Get the wp/v2 namespace index
+      description: Returns the namespace descriptor and every route registered under wp/v2.
+      security:
+      - {}
+      responses:
+        '200':
+          description: Namespace index
+          content:
+            application/json:
+              schema:
+                type: object
+  /wp/v2/types:
+    get:
+      operationId: listTypes
+      tags:
+      - Discovery
+      summary: List registered content types
+      security:
+      - {}
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: List registered content types
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/ContentType'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      tags:
+      - Discovery
+      summary: List registered taxonomies
+      security:
+      - {}
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Limit results to taxonomies associated with a specific post type.
+      responses:
+        '200':
+          description: List registered taxonomies
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Taxonomy'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses:
+    get:
+      operationId: listStatuses
+      tags:
+      - Discovery
+      summary: List registered post statuses
+      security:
+      - {}
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: List registered post statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Status'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/types/{type}:
+    get:
+      operationId: getType
+      tags:
+      - Discovery
+      summary: Get a single registered content type
+      security:
+      - {}
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: An identifier for the post type.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: An alphanumeric identifier for the post type.
+      responses:
+        '200':
+          description: Get a single registered content type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentType'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      operationId: getTaxonomy
+      tags:
+      - Discovery
+      summary: Get a single registered taxonomy
+      security:
+      - {}
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        schema:
+          type: string
+        description: An alphanumeric identifier for the taxonomy.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: taxonomy
+        in: query
+        required: false
+        schema:
+          type: string
+        description: An alphanumeric identifier for the taxonomy.
+      responses:
+        '200':
+          description: Get a single registered taxonomy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses/{status}:
+    get:
+      operationId: getStatus
+      tags:
+      - Discovery
+      summary: Get a single registered post status
+      security:
+      - {}
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+        description: An alphanumeric identifier for the status.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+        description: An alphanumeric identifier for the status.
+      responses:
+        '200':
+          description: Get a single registered post status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Error:
+      type: object
+      description: 'The WordPress REST API error envelope. This is NOT RFC 9457 problem+json: it is served as application/json with a string code, a human message and a data object that repeats the HTTP status.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id, rest_forbidden.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status, repeated in the body.
+            params:
+              type: object
+              description: Per-parameter validation messages.
+            details:
+              type: object
+    Status:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        public:
+          type: boolean
+        queryable:
+          type: boolean
+        date_floating:
+          type: boolean
+        _links:
+          type: object
+    ContentType:
+      type: object
+      properties:
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+    RouteIndex:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type: number
+        timezone_string:
+          type: string
+        namespaces:
+          type: array
+          items:
+            type: string
+        authentication:
+          type: object
+          description: Supported authentication schemes; this install advertises application-passwords only.
+        routes:
+          type: object
+        site_icon_url:
+          type: string
+        _links:
+          type: object
+    Taxonomy:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        types:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+  responses:
+    BadRequest:
+      description: Invalid parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No record found for the given identifier
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress application passwords, the only scheme this install advertises in the route index under authentication['application-passwords'], with authorization at https://atsenatx.com/wp-admin/authorize-application.php. Required only for the write and administrative routes, which are out of scope for this document; every operation modelled here is anonymous.

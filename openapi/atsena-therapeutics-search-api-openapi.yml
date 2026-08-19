@@ -1,0 +1,200 @@
+openapi: 3.2.0
+info:
+  title: Atsena Therapeutics Content API (WordPress REST API) Search API
+  version: wp/v2
+  description: 'The anonymously readable content API behind atsenatx.com, derived from the WordPress REST route index Atsena Therapeutics publishes at https://atsenatx.com/wp-json/. It exposes Atsena press releases and company news (posts), the program, technology, clinical-trial, patient and about pages (pages), the media library, post categories and tags, cross-content search, and the type/taxonomy/status discovery endpoints.
+
+
+    Atsena Therapeutics is a clinical-stage gene therapy company and runs no developer program: it publishes no developer documentation, no API reference, no support channel for this surface and no specification of its own. This document is a faithful derivation of the routes, parameters, defaults and enums the site itself advertises, restricted to the read operations verified to return HTTP 200 without credentials on 2026-08-02.
+
+
+    Deliberately not modelled: write operations (registered on the same routes but gated behind WordPress application passwords and administrative, not a public API offering); endpoints that reject anonymous callers (users, settings, plugins, templates, menus, and the wp-abilities/v1 registry, all HTTP 401); comments (disabled site-wide, HTTP 403); and the plugin namespaces (yoast/v1, redirection/v1, cookieyes/v1, wpe/*, wp-site-health/v1, wp-block-editor/v1), which are site-administration surfaces rather than content.'
+  contact:
+    name: Atsena Therapeutics
+    url: https://atsenatx.com/contact/
+  x-derived-from: https://atsenatx.com/wp-json/
+  x-derived-on: '2026-08-02'
+  x-api-evangelist-note: Derived by the API Evangelist enrichment pipeline from the provider-published WordPress REST route index; not authored or endorsed by Atsena Therapeutics.
+servers:
+- url: https://atsenatx.com/wp-json
+  description: Production
+security:
+- {}
+tags:
+- name: Search
+  description: Cross-content search over posts and pages
+paths:
+  /wp/v2/search:
+    get:
+      operationId: searchContent
+      tags:
+      - Search
+      summary: Search across posts and pages
+      description: Cross-content search returning lightweight result objects (id, title, url, type, subtype). 72 items were indexed at derivation time.
+      security:
+      - {}
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to specific IDs.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        description: Maximum number of items to be returned in result set.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: subtype
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - post
+            - page
+            - category
+            - post_tag
+            - any
+          default: any
+        description: Limit results to items of one or more object subtypes.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+        description: Limit results to items of an object type.
+      responses:
+        '200':
+          description: Search results
+          headers:
+            X-WP-Total:
+              description: Total number of records in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    SearchResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id of the matching post or page.
+        title:
+          type: string
+        url:
+          type: string
+        type:
+          type: string
+        subtype:
+          type: string
+        _links:
+          type: object
+    Error:
+      type: object
+      description: 'The WordPress REST API error envelope. This is NOT RFC 9457 problem+json: it is served as application/json with a string code, a human message and a data object that repeats the HTTP status.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id, rest_forbidden.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status, repeated in the body.
+            params:
+              type: object
+              description: Per-parameter validation messages.
+            details:
+              type: object
+  responses:
+    NotFound:
+      description: No record found for the given identifier
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress application passwords, the only scheme this install advertises in the route index under authentication['application-passwords'], with authorization at https://atsenatx.com/wp-admin/authorize-application.php. Required only for the write and administrative routes, which are out of scope for this document; every operation modelled here is anonymous.

@@ -1,0 +1,38 @@
+{
+  "provider": "atsena-therapeutics",
+  "sources": [
+    "atsena-therapeutics-categories-api-openapi.yml",
+    "atsena-therapeutics-discovery-api-openapi.yml",
+    "atsena-therapeutics-media-api-openapi.yml",
+    "atsena-therapeutics-oembed-api-openapi.yml",
+    "atsena-therapeutics-pages-api-openapi.yml",
+    "atsena-therapeutics-posts-api-openapi.yml",
+    "atsena-therapeutics-search-api-openapi.yml",
+    "atsena-therapeutics-tags-api-openapi.yml"
+  ],
+  "outputs": [
+    "atsena-therapeutics-categories-api-openapi.yml",
+    "atsena-therapeutics-discovery-api-openapi.yml",
+    "atsena-therapeutics-media-api-openapi.yml",
+    "atsena-therapeutics-oembed-api-openapi.yml",
+    "atsena-therapeutics-pages-api-openapi.yml",
+    "atsena-therapeutics-posts-api-openapi.yml",
+    "atsena-therapeutics-search-api-openapi.yml",
+    "atsena-therapeutics-tags-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "atsena-therapeutics-categories-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-oembed-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-posts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "atsena-therapeutics-tags-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

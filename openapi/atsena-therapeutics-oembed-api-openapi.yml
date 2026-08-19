@@ -1,0 +1,136 @@
+openapi: 3.2.0
+info:
+  title: Atsena Therapeutics Content API (WordPress REST API) O Embed API
+  version: wp/v2
+  description: 'The anonymously readable content API behind atsenatx.com, derived from the WordPress REST route index Atsena Therapeutics publishes at https://atsenatx.com/wp-json/. It exposes Atsena press releases and company news (posts), the program, technology, clinical-trial, patient and about pages (pages), the media library, post categories and tags, cross-content search, and the type/taxonomy/status discovery endpoints.
+
+
+    Atsena Therapeutics is a clinical-stage gene therapy company and runs no developer program: it publishes no developer documentation, no API reference, no support channel for this surface and no specification of its own. This document is a faithful derivation of the routes, parameters, defaults and enums the site itself advertises, restricted to the read operations verified to return HTTP 200 without credentials on 2026-08-02.
+
+
+    Deliberately not modelled: write operations (registered on the same routes but gated behind WordPress application passwords and administrative, not a public API offering); endpoints that reject anonymous callers (users, settings, plugins, templates, menus, and the wp-abilities/v1 registry, all HTTP 401); comments (disabled site-wide, HTTP 403); and the plugin namespaces (yoast/v1, redirection/v1, cookieyes/v1, wpe/*, wp-site-health/v1, wp-block-editor/v1), which are site-administration surfaces rather than content.'
+  contact:
+    name: Atsena Therapeutics
+    url: https://atsenatx.com/contact/
+  x-derived-from: https://atsenatx.com/wp-json/
+  x-derived-on: '2026-08-02'
+  x-api-evangelist-note: Derived by the API Evangelist enrichment pipeline from the provider-published WordPress REST route index; not authored or endorsed by Atsena Therapeutics.
+servers:
+- url: https://atsenatx.com/wp-json
+  description: Production
+security:
+- {}
+tags:
+- name: oEmbed
+  description: oEmbed representation of site URLs
+paths:
+  /oembed/1.0/embed:
+    get:
+      operationId: getOembed
+      tags:
+      - oEmbed
+      summary: Get the oEmbed representation of a site URL
+      description: Returns the oEmbed 1.0 document for a URL on atsenatx.com.
+      security:
+      - {}
+      parameters:
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          default: json
+      - name: maxwidth
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 600
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uri
+        description: The URL of the resource for which to fetch oEmbed data.
+      responses:
+        '200':
+          description: oEmbed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Oembed'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Error:
+      type: object
+      description: 'The WordPress REST API error envelope. This is NOT RFC 9457 problem+json: it is served as application/json with a string code, a human message and a data object that repeats the HTTP status.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id, rest_forbidden.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status, repeated in the body.
+            params:
+              type: object
+              description: Per-parameter validation messages.
+            details:
+              type: object
+    Oembed:
+      type: object
+      properties:
+        version:
+          type: string
+        provider_name:
+          type: string
+        provider_url:
+          type: string
+          format: uri
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+  responses:
+    NotFound:
+      description: No record found for the given identifier
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: WordPress application passwords, the only scheme this install advertises in the route index under authentication['application-passwords'], with authorization at https://atsenatx.com/wp-admin/authorize-application.php. Required only for the write and administrative routes, which are out of scope for this document; every operation modelled here is anonymous.
