@@ -17,6 +17,17 @@ description: >-
   library as JSON; the OpenAPI in this repo is derived by API Evangelist from that surface's own
   live route index.
 url: https://raw.githubusercontent.com/api-evangelist/atsena-therapeutics/refs/heads/main/apis.yml
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 image: https://atsenatx.com/wp-content/themes/atsenatx/img/touch-icon-ipad-retina.png
 x-type: company
 x-source: harvest:secondary-market
