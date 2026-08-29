@@ -209,26 +209,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: No record found for the given identifier
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Tag:
-      type: object
-      properties:
-        id:
-          type: integer
-        count:
-          type: integer
-        description:
-          type: string
-        link:
-          type: string
-        name:
-          type: string
-        slug:
-          type: string
-        taxonomy:
-          type: string
-        _links:
-          type: object
     Error:
       type: object
       description: 'The WordPress REST API error envelope. This is NOT RFC 9457 problem+json: it is served as application/json with a string code, a human message and a data object that repeats the HTTP status.'
@@ -254,19 +248,25 @@ components:
               description: Per-parameter validation messages.
             details:
               type: object
-  responses:
-    NotFound:
-      description: No record found for the given identifier
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid parameter
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+        description:
+          type: string
+        link:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomy:
+          type: string
+        _links:
+          type: object
   securitySchemes:
     applicationPassword:
       type: http

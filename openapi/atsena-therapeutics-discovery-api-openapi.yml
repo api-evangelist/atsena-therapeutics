@@ -292,6 +292,36 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    RouteIndex:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type: number
+        timezone_string:
+          type: string
+        namespaces:
+          type: array
+          items:
+            type: string
+        authentication:
+          type: object
+          description: Supported authentication schemes; this install advertises application-passwords only.
+        routes:
+          type: object
+        site_icon_url:
+          type: string
+        _links:
+          type: object
     Error:
       type: object
       description: 'The WordPress REST API error envelope. This is NOT RFC 9457 problem+json: it is served as application/json with a string code, a human message and a data object that repeats the HTTP status.'
@@ -332,57 +362,6 @@ components:
           type: boolean
         _links:
           type: object
-    ContentType:
-      type: object
-      properties:
-        description:
-          type: string
-        hierarchical:
-          type: boolean
-        name:
-          type: string
-        slug:
-          type: string
-        taxonomies:
-          type: array
-          items:
-            type: string
-        rest_base:
-          type: string
-        rest_namespace:
-          type: string
-        _links:
-          type: object
-    RouteIndex:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        url:
-          type: string
-          format: uri
-        home:
-          type: string
-          format: uri
-        gmt_offset:
-          type: number
-        timezone_string:
-          type: string
-        namespaces:
-          type: array
-          items:
-            type: string
-        authentication:
-          type: object
-          description: Supported authentication schemes; this install advertises application-passwords only.
-        routes:
-          type: object
-        site_icon_url:
-          type: string
-        _links:
-          type: object
     Taxonomy:
       type: object
       properties:
@@ -404,15 +383,36 @@ components:
           type: string
         _links:
           type: object
+    ContentType:
+      type: object
+      properties:
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
   responses:
-    BadRequest:
-      description: Invalid parameter
+    NotFound:
+      description: No record found for the given identifier
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: No record found for the given identifier
+    BadRequest:
+      description: Invalid parameter
       content:
         application/json:
           schema:
