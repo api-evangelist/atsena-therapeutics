@@ -1,38 +1,45 @@
-# Kin Score artifact — atsena-therapeutics — 2026-08-04T083143
+# Kin Score artifact — atsena-therapeutics — 2026-09-02T224043
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: atsena-therapeutics
-  schema_version: 0.9
-  scored_at: '2026-08-04'
-  run_ts: 2026-08-04T083143
-  composite: 30.4
-  band: thin
+  schema_version: 0.18.0
+  scored_at: '2026-09-02'
+  run_ts: 2026-09-02T224043
+  composite: 19.5
+  band: emerging
   facets:
-    discoverability: 87.0
-    contract_quality: 60.5
-    governance: 11.5
+    discoverability: 81.5
+    contract_quality: 13.6
+    governance: 4.5
     operational_transparency: 0.0
-    developer_ergonomics: 19.0
+    developer_ergonomics: 20.8
     commercial_clarity: 10.5
+    contract_governance: 4.5
+    access_clarity: 10.5
   agent_readiness:
-    score: 33.6
+    score: 22.3
     band: agent-aware
     dimensions:
       spec_presence: true
       agentic_access: false
+      reversibility_documented: na
       mcp_server: false
-      auth_clarity: true
-      idempotency: false
+      auth_clarity: bearer
+      idempotency: na
       error_semantics: documented
       openapi_examples: false
       rate_limit_signal: false
       event_surface_described: false
       agent_skills: derived
-      well_known_catalog: true
+      well_known_catalog: false
       consent_identity: false
       agent_card: false
-      dry_run_mode: false
+      dry_run_mode: na
+      delegated_identity: false
+      protected_resource_metadata: false
+      dynamic_client_registration: false
+      agentic_commerce: false
   regulatory:
     applies: true
     regime: Health
@@ -43,7 +50,7 @@ kin_score:
     skills: derived
     conformance: derived
     contracts:
-      total: 1
-      derived: 0
-      coverage: 0.0
+      total: 9
+      derived: 9
+      coverage: 100.0
       callable: 100.0
