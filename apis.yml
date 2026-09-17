@@ -130,24 +130,6 @@ apis:
     url: errors/atsena-therapeutics-problem-types.yml
   - type: DataModel
     url: data-model/atsena-therapeutics-data-model.yml
-- aid: atsena-therapeutics:atsena-therapeutics-oembed-api
-  name: Atsena Therapeutics O Embed API
-  description: oEmbed representation of site URLs
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://atsenatx.com/wp-json
-  tags:
-  - oEmbed
-  properties:
-  - type: OpenAPI
-    url: openapi/atsena-therapeutics-oembed-api-openapi.yml
-  - type: Authentication
-    url: authentication/atsena-therapeutics-authentication.yml
-  - type: Conventions
-    url: conventions/atsena-therapeutics-conventions.yml
-  - type: ErrorCatalog
-    url: errors/atsena-therapeutics-problem-types.yml
-  - type: DataModel
-    url: data-model/atsena-therapeutics-data-model.yml
 - aid: atsena-therapeutics:atsena-therapeutics-pages-api
   name: Atsena Therapeutics Pages API
   description: 'Static site pages: programs, technology, clinical trials, patients, about'
@@ -212,6 +194,24 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/atsena-therapeutics-tags-api-openapi.yml
+  - type: Authentication
+    url: authentication/atsena-therapeutics-authentication.yml
+  - type: Conventions
+    url: conventions/atsena-therapeutics-conventions.yml
+  - type: ErrorCatalog
+    url: errors/atsena-therapeutics-problem-types.yml
+  - type: DataModel
+    url: data-model/atsena-therapeutics-data-model.yml
+- aid: atsena-therapeutics:atsena-therapeutics-o-embed-api
+  name: Atsena Therapeutics o Embed API
+  description: oEmbed representation of site URLs
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://atsenatx.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/atsena-therapeutics-o-embed-api-openapi.yml
   - type: Authentication
     url: authentication/atsena-therapeutics-authentication.yml
   - type: Conventions
