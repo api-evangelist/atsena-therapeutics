@@ -208,6 +208,8 @@ apis:
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://atsenatx.com/wp-json
   tags:
+  - oEmbed
+  tags_raw:
   - o Embed
   properties:
   - type: OpenAPI
@@ -264,8 +266,6 @@ common:
   url: https://atsenatx.com/about/partners/
 - type: SecondaryMarket
   url: https://forgeglobal.com/atsena-therapeutics_stock/
-- type: OpenAPI
-  url: openapi/_original/atsena-therapeutics-wp-rest-openapi.yml
 - type: Overlay
   url: overlays/atsena-therapeutics-wp-rest-overlay.yaml
 - type: Authentication
