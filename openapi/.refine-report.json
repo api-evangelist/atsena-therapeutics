@@ -1,30 +1,37 @@
 {
   "provider": "atsena-therapeutics",
   "sources": [
-    "atsena-therapeutics-categories-api-openapi.yml",
-    "atsena-therapeutics-discovery-api-openapi.yml",
-    "atsena-therapeutics-media-api-openapi.yml",
-    "atsena-therapeutics-oembed-api-openapi.yml",
-    "atsena-therapeutics-pages-api-openapi.yml",
-    "atsena-therapeutics-posts-api-openapi.yml",
-    "atsena-therapeutics-search-api-openapi.yml",
-    "atsena-therapeutics-tags-api-openapi.yml"
+    "_ae-authored/atsena-therapeutics-wp-rest-openapi.yml"
   ],
   "outputs": [
     "atsena-therapeutics-categories-api-openapi.yml",
     "atsena-therapeutics-discovery-api-openapi.yml",
     "atsena-therapeutics-media-api-openapi.yml",
-    "atsena-therapeutics-oembed-api-openapi.yml",
     "atsena-therapeutics-pages-api-openapi.yml",
     "atsena-therapeutics-posts-api-openapi.yml",
     "atsena-therapeutics-search-api-openapi.yml",
-    "atsena-therapeutics-tags-api-openapi.yml"
+    "atsena-therapeutics-tags-api-openapi.yml",
+    "atsena-therapeutics-oembed-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
-    "apis.yml register: already-registered"
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "atsena-therapeutics-wp-rest-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "superseded outputs removed: atsena-therapeutics-o-embed-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 8 total)"
   ],
-  "skipped": []
+  "skipped": [
+    "atsena-therapeutics-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-o-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "atsena-therapeutics-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

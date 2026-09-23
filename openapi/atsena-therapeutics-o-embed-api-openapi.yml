@@ -1,14 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Atsena Therapeutics Content API (WordPress REST API) O Embed API
+  title: Atsena Therapeutics Content API (WordPress REST API) O…
   version: wp/v2
-  description: 'The anonymously readable content API behind atsenatx.com, derived from the WordPress REST route index Atsena Therapeutics publishes at https://atsenatx.com/wp-json/. It exposes Atsena press releases and company news (posts), the program, technology, clinical-trial, patient and about pages (pages), the media library, post categories and tags, cross-content search, and the type/taxonomy/status discovery endpoints.
-
-
-    Atsena Therapeutics is a clinical-stage gene therapy company and runs no developer program: it publishes no developer documentation, no API reference, no support channel for this surface and no specification of its own. This document is a faithful derivation of the routes, parameters, defaults and enums the site itself advertises, restricted to the read operations verified to return HTTP 200 without credentials on 2026-08-02.
-
-
-    Deliberately not modelled: write operations (registered on the same routes but gated behind WordPress application passwords and administrative, not a public API offering); endpoints that reject anonymous callers (users, settings, plugins, templates, menus, and the wp-abilities/v1 registry, all HTTP 401); comments (disabled site-wide, HTTP 403); and the plugin namespaces (yoast/v1, redirection/v1, cookieyes/v1, wpe/*, wp-site-health/v1, wp-block-editor/v1), which are site-administration surfaces rather than content.'
+  description: The anonymously readable content API behind atsenatx.com, derived from the WordPress REST route index Atsena Therapeutics publishes at https://atsenatx.com/wp-json/.
   contact:
     name: Atsena Therapeutics
     url: https://atsenatx.com/contact/
@@ -21,14 +15,14 @@ servers:
 security:
 - {}
 tags:
-- name: oEmbed
+- name: o Embed
   description: oEmbed representation of site URLs
 paths:
   /oembed/1.0/embed:
     get:
       operationId: getOembed
       tags:
-      - oEmbed
+      - o Embed
       summary: Get the oEmbed representation of a site URL
       description: Returns the oEmbed 1.0 document for a URL on atsenatx.com.
       security:
@@ -65,45 +59,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: No record found for the given identifier
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Invalid parameter
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Oembed:
-      type: object
-      properties:
-        version:
-          type: string
-        provider_name:
-          type: string
-        provider_url:
-          type: string
-          format: uri
-        author_name:
-          type: string
-        author_url:
-          type: string
-          format: uri
-        title:
-          type: string
-        type:
-          type: string
-        width:
-          type: integer
-        height:
-          type: integer
-        html:
-          type: string
     Error:
       type: object
       description: 'The WordPress REST API error envelope. This is NOT RFC 9457 problem+json: it is served as application/json with a string code, a human message and a data object that repeats the HTTP status.'
@@ -129,6 +85,44 @@ components:
               description: Per-parameter validation messages.
             details:
               type: object
+    Oembed:
+      type: object
+      properties:
+        version:
+          type: string
+        provider_name:
+          type: string
+        provider_url:
+          type: string
+          format: uri
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+  responses:
+    BadRequest:
+      description: Invalid parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No record found for the given identifier
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     applicationPassword:
       type: http
