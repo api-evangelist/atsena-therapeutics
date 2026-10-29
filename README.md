@@ -64,5 +64,107 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Atsena Therapeutics is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/atsena-therapeutics_stock/
+Atsena Therapeutics is a clinical-stage gene therapy company based in Durham, North Carolina, in the Research Triangle, developing first- and best-in-class genetic medicines for inherited retinal diseases with the goal of reversing or preventing blindness. Founded by ocular gene therapy pioneers Shannon Boye and Sanford Boye, the company builds on two proprietary AAV delivery platforms: a laterally spreading AAV.SPR capsid engineered to reach retinal cells without the surgical trauma of a subretinal bleb, and a dual-vector technology that splits genes too large for a single AAV across two vectors. Its clinical pipeline includes ATSN-201 for X-linked retinoschisis (XLRS) in a pivotal Phase 3 trial, ATSN-101 for LCA1 (Leber congenital amaurosis 1) advancing to a pivotal trial with partner Nippon Shinyaku, and IND-enabling programs ATSN-301 for Usher syndrome 1B and ATSN-401 for Stargardt disease. Atsena runs no developer program and publishes no product API, no developer documentation and no specification of its own. The only machine-readable surface it exposes is the anonymously readable WordPress REST content API behind atsenatx.com, which serves the company's press releases, program and platform pages, and media library as JSON; the OpenAPI in this repo is derived by API Evangelist from that surface's own live route index.
+
+**Areas:** Company · Biotechnology · Gene Therapy · Life Sciences · Pharmaceuticals · Clinical Trials · Ophthalmology · Rare Disease · Healthcare · Research and Development · content-api · WordPress
+
+## Atsena Therapeutics on APIs.io
+
+Everything profiled for Atsena Therapeutics is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/atsena-therapeutics/](https://apis.io/providers/atsena-therapeutics/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [Atsena Therapeutics Website (WordPress REST)](https://apis.io/apis/atsena-therapeutics/atsenatx-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Atsena Therapeutics website at atsenatx.com: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Collections (9)
+
+Postman and Open Collection request collections.
+
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-categories-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-discovery-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-media-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-oembed-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-pages-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-posts-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-search-api/)
+- [Moved to /providers/atsena-therapeutics/](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-tags-api/)
+- [API Collection](https://apis.io/collections/atsena-therapeutics/open-atsena-therapeutics-wp-rest-discovery-original/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Atsena Therapeutics Wp Rest Overlay](https://apis.io/overlays/atsena-therapeutics/atsena-therapeutics-wp-rest-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Atsena Therapeutics Authentication](https://apis.io/security/atsena-therapeutics/atsena-therapeutics-authentication/)
+- [Atsena Therapeutics Domain Security](https://apis.io/security/atsena-therapeutics/atsena-therapeutics-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://atsenatx.com/)
+- [Support](https://atsenatx.com/contact/)
+- [Blog](https://atsenatx.com/news/)
+- [Privacy policy](https://atsenatx.com/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 18.0** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 8.3 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 10.5 |
+
+**Agent readiness 17.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 16.4** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/atsena-therapeutics/](https://apis.io/providers/atsena-therapeutics/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Atsena Therapeutics: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/atsena-therapeutics/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
